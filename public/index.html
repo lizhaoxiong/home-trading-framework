@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交易框架</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0e1a;
+    color: #e0e6f0;
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    user-select: none;
+  }
+
+  .frame {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    width: 100%;
+    max-width: 960px;
+  }
+  .radar-card {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 16px 12px 8px;
+  }
+  .radar-title { font-size: 20px; font-weight: 700; letter-spacing: 4px; margin-bottom: 12px; }
+  .left .radar-title  { color: #7ec8e3; }
+  .right .radar-title { color: #f0b87e; }
+  canvas { cursor: crosshair; display: block; }
+
+  .center-block {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 24px; padding-top: 48px;
+  }
+  .center-label {
+    font-size: 22px; font-weight: 900; letter-spacing: 6px;
+    writing-mode: vertical-rl; text-orientation: upright;
+    background: linear-gradient(180deg, #7ec8e3 0%, #ffffff 50%, #f0b87e 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; padding: 14px 0;
+  }
+  .vline { width: 1px; height: 44px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.1), transparent); }
+
+  /* ── 股票区 ── */
+  .stock-zone {
+    width: 100%; max-width: 960px;
+    margin-top: 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .conn-hint { font-size: 11px; color: #2a3548; letter-spacing: 1px; }
+
+  .stock-list {
+    display: flex; flex-direction: column; gap: 6px;
+    width: 300px; min-height: 10px;
+  }
+
+  .stock-chip {
+    display: flex; align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.04);
+    font-size: 13px; font-weight: 600;
+    color: #7a8eaa; letter-spacing: 1px;
+    transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+    cursor: default; position: relative;
+  }
+  .stock-chip:hover { background: rgba(255,255,255,0.08); }
+  .stock-chip.active { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); color: #e8f0ff; }
+  .stock-chip.drag-over { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.12); }
+  .stock-chip.dragging { opacity: 0.35; }
+
+  .drag-handle {
+    padding: 10px 8px 10px 12px;
+    color: rgba(255,255,255,0.15);
+    font-size: 14px; cursor: grab; flex-shrink: 0; line-height: 1;
+  }
+  .drag-handle:active { cursor: grabbing; }
+  .drag-handle:hover { color: rgba(255,255,255,0.4); }
+
+  .stock-name-input {
+    flex: 1; margin: 5px 4px; padding: 4px 8px;
+    background: transparent; border: 1px solid transparent; border-radius: 6px;
+    color: #c8d8f0; font-size: 13px; font-weight: 600;
+    font-family: inherit; letter-spacing: 1px; outline: none; min-width: 0;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  }
+  .stock-name-input:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); }
+  .stock-name-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); cursor: text; }
+  .stock-chip.active .stock-name-input { color: #e8f0ff; }
+
+  .btn-del {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px; border: none;
+    font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    background: rgba(255,80,80,0.08); color: rgba(255,100,100,0.5);
+    margin-right: 6px; transition: all 0.15s;
+  }
+  .btn-del:hover { background: rgba(255,80,80,0.22); color: #ff6060; }
+
+  .add-row { display: flex; gap: 8px; align-items: center; }
+  .add-input {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 8px 16px; color: #e0e6f0;
+    font-size: 13px; font-family: inherit; outline: none; width: 220px; text-align: center;
+    transition: border-color 0.15s;
+  }
+  .add-input::placeholder { color: rgba(255,255,255,0.18); }
+  .add-input:focus { border-color: rgba(255,255,255,0.28); }
+  .add-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07);
+    color: #e0e6f0; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .add-btn:hover { background: rgba(255,255,255,0.14); }
+  .add-btn:active { transform: scale(0.9); }
+  .add-btn:disabled { opacity: 0.2; cursor: default; }
+  .stock-count { font-size: 11px; color: #2e3a52; letter-spacing: 1px; }
+
+  /* 保存状态指示 */
+  .save-status {
+    position: fixed; bottom: 18px; right: 22px;
+    font-size: 11px; letter-spacing: 1px;
+    padding: 5px 12px; border-radius: 20px;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .save-status.saving { background: rgba(255,200,80,0.12); color: rgba(255,200,80,0.7); opacity: 1; }
+  .save-status.saved  { background: rgba(80,200,130,0.12); color: rgba(80,200,130,0.7); opacity: 1; }
+  .save-status.hidden { opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="radar-card left">
+    <div class="radar-title">审美</div>
+    <canvas id="radarLeft" width="300" height="300"></canvas>
+  </div>
+  <div class="center-block">
+    <div class="vline"></div>
+    <div class="center-label">交易模式</div>
+    <div class="vline"></div>
+  </div>
+  <div class="radar-card right">
+    <div class="radar-title">时机</div>
+    <canvas id="radarRight" width="300" height="300"></canvas>
+  </div>
+</div>
+
+<div class="stock-zone">
+  <div class="conn-hint">每只股票同时对应左右两个雷达图 · 拖动排序</div>
+  <div class="stock-list" id="stockList"></div>
+  <div class="add-row">
+    <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
+    <button class="add-btn" id="addBtn" onclick="addStock()">＋</button>
+    <span class="stock-count" id="stockCount">0 / 6</span>
+  </div>
+</div>
+
+<div class="save-status hidden" id="saveStatus"></div>
+
+<script>
+/* ─────────────── RadarChart ─────────────── */
+class RadarChart {
+  constructor(canvasId, labels, color, centerLabel, onDragEnd) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.labels = labels; this.color = color; this.centerLabel = centerLabel;
+    this.onDragEnd = onDragEnd;
+    this.n = labels.length;
+    this.W = this.canvas.width; this.H = this.canvas.height;
+    this.cx = this.W / 2; this.cy = this.H / 2;
+    this.maxR = Math.min(this.W, this.H) / 2 - 52;
+    this.angles = labels.map((_, i) => (Math.PI * 2 * i / this.n) - Math.PI / 2);
+    this.dragging = -1;
+    this.activeValues = null;
+    this.canvas.addEventListener('mousedown', e => this.onDown(e));
+    this.canvas.addEventListener('mousemove', e => this.onMove(e));
+    this.canvas.addEventListener('mouseup',   () => this.onUp());
+    this.canvas.addEventListener('mouseleave',() => this.onUp());
+    this.canvas.addEventListener('touchstart', e => { e.preventDefault(); this.onDown(e.touches[0]); }, { passive: false });
+    this.canvas.addEventListener('touchmove',  e => { e.preventDefault(); this.onMove(e.touches[0]); }, { passive: false });
+    this.canvas.addEventListener('touchend',   () => this.onUp());
+    this.draw();
+  }
+  setValues(v) { this.activeValues = v; this.draw(); }
+  clearValues() { this.activeValues = null; this.draw(); }
+  getPos(e) {
+    const r = this.canvas.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * (this.W / r.width), y: (e.clientY - r.top) * (this.H / r.height) };
+  }
+  getPointPos(i) {
+    const v = this.activeValues ? this.activeValues[i] : 0.5;
+    return { x: this.cx + this.maxR * v * Math.cos(this.angles[i]), y: this.cy + this.maxR * v * Math.sin(this.angles[i]) };
+  }
+  onDown(e) {
+    if (!this.activeValues) return;
+    const pos = this.getPos(e);
+    for (let i = 0; i < this.n; i++) {
+      const p = this.getPointPos(i);
+      if ((pos.x-p.x)**2 + (pos.y-p.y)**2 < 256) { this.dragging = i; return; }
+    }
+  }
+  onMove(e) {
+    if (this.dragging < 0 || !this.activeValues) return;
+    const pos = this.getPos(e);
+    const a = this.angles[this.dragging];
+    let v = ((pos.x - this.cx) * Math.cos(a) + (pos.y - this.cy) * Math.sin(a)) / this.maxR;
+    this.activeValues[this.dragging] = Math.max(0.05, Math.min(1.0, v));
+    this.draw();
+  }
+  onUp() {
+    if (this.dragging >= 0) { this.dragging = -1; this.onDragEnd && this.onDragEnd(); }
+    else this.dragging = -1;
+  }
+  rgb() { const m = this.color.match(/\d+/g); return `${m[0]},${m[1]},${m[2]}`; }
+  draw() {
+    const { ctx, cx, cy, maxR, n, angles } = this;
+    const vals = this.activeValues || new Array(n).fill(0.5);
+    const has = !!this.activeValues;
+    const rgb = this.rgb();
+    ctx.clearRect(0, 0, this.W, this.H);
+    for (let l = 1; l <= 4; l++) {
+      const r = maxR * l / 4;
+      ctx.beginPath();
+      angles.forEach((a, i) => { const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+      ctx.closePath(); ctx.strokeStyle=`rgba(255,255,255,${0.03+l*0.025})`; ctx.lineWidth=1; ctx.stroke();
+    }
+    angles.forEach(a => {
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));
+      ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1; ctx.stroke();
+    });
+    ctx.beginPath();
+    angles.forEach((a,i) => { const r=maxR*vals[i]; const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.closePath();
+    ctx.fillStyle=has?`rgba(${rgb},0.14)`:`rgba(255,255,255,0.03)`; ctx.fill();
+    ctx.strokeStyle=has?`rgba(${rgb},0.85)`:`rgba(255,255,255,0.1)`; ctx.lineWidth=has?2:1.5; ctx.stroke();
+    angles.forEach((a,i) => {
+      const p = this.getPointPos(i);
+      if (has) {
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,10);
+        g.addColorStop(0,`rgba(${rgb},0.5)`); g.addColorStop(1,`rgba(${rgb},0)`);
+        ctx.beginPath(); ctx.arc(p.x,p.y,10,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x,p.y,this.dragging===i?7:5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${rgb},1)`; ctx.fill();
+        ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.fill();
+      }
+    });
+    angles.forEach((a,i) => {
+      const lR=maxR+30; const x=cx+lR*Math.cos(a),y=cy+lR*Math.sin(a);
+      if (Math.cos(a)>0.3) ctx.textAlign='left'; else if (Math.cos(a)<-0.3) ctx.textAlign='right'; else ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(200,218,240,0.85)'; ctx.font='13px PingFang SC,Microsoft YaHei,sans-serif';
+      ctx.fillText(this.labels[i],x,y);
+      if (has) { ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`; ctx.fillText(`${Math.round(vals[i]*100)}%`,x,y+14); }
+    });
+    ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
+    ctx.fillStyle=has?`rgba(${rgb},0.9)`:'rgba(255,255,255,0.12)'; ctx.fill();
+    if (has) {
+      ctx.font='bold 13px PingFang SC,Microsoft YaHei,sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle=`rgba(${rgb},1)`; ctx.fillText(this.centerLabel,cx,cy+20);
+    }
+  }
+}
+
+/* ─────────────── 自动保存 ─────────────── */
+let saveTimer = null;
+const statusEl = document.getElementById('saveStatus');
+let hideTimer = null;
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  showStatus('saving', '保存中…');
+  saveTimer = setTimeout(saveData, 600);
+}
+
+function showStatus(cls, text) {
+  clearTimeout(hideTimer);
+  statusEl.className = `save-status ${cls}`;
+  statusEl.textContent = text;
+}
+
+async function saveData() {
+  try {
+    await fetch('/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stocks, activeIdx })
+    });
+    showStatus('saved', '已保存 ✓');
+    hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
+  } catch (e) {
+    showStatus('saving', '保存失败');
+  }
+}
+
+async function loadData() {
+  try {
+    const res = await fetch('/api/data');
+    const data = await res.json();
+    stocks = data.stocks || [];
+    activeIdx = data.activeIdx ?? -1;
+    if (activeIdx >= stocks.length) activeIdx = stocks.length - 1;
+    syncRadars();
+    renderList();
+  } catch (e) {
+    stocks = []; activeIdx = -1;
+  }
+}
+
+/* ─────────────── 初始化雷达 ─────────────── */
+const radarL = new RadarChart('radarLeft',  ['辨识度','地位','高度','强势','K线','唯一性'], 'rgba(126,200,227,1)', '审美', scheduleSave);
+const radarR = new RadarChart('radarRight', ['冰点','反人性','筹码换手','情绪周期','强弱转换','K线'], 'rgba(240,184,126,1)', '时机', scheduleSave);
+
+/* ─────────────── 股票数据 ─────────────── */
+let stocks = [];
+let activeIdx = -1;
+
+function addStock() {
+  if (stocks.length >= 6) return;
+  const input = document.getElementById('stockInput');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+  stocks.push({ name, valLeft: new Array(6).fill(0.5), valRight: new Array(6).fill(0.5) });
+  input.value = '';
+  activeIdx = stocks.length - 1;
+  syncRadars(); renderList(); scheduleSave();
+}
+
+function selectStock(idx) {
+  if (activeIdx === idx) return;
+  activeIdx = idx;
+  syncRadars();
+  document.querySelectorAll('.stock-chip').forEach((c, i) => c.classList.toggle('active', i === idx));
+  scheduleSave();
+}
+
+function deleteStock(idx) {
+  stocks.splice(idx, 1);
+  if (activeIdx >= stocks.length) activeIdx = stocks.length - 1;
+  syncRadars(); renderList(); scheduleSave();
+}
+
+function syncRadars() {
+  if (activeIdx >= 0 && stocks[activeIdx]) {
+    radarL.setValues(stocks[activeIdx].valLeft);
+    radarR.setValues(stocks[activeIdx].valRight);
+  } else { radarL.clearValues(); radarR.clearValues(); }
+}
+
+/* ─────────────── 拖拽排序 ─────────────── */
+let dragSrc = -1;
+
+function renderList() {
+  const list  = document.getElementById('stockList');
+  const count = document.getElementById('stockCount');
+  const btn   = document.getElementById('addBtn');
+  list.innerHTML = '';
+
+  stocks.forEach((s, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'stock-chip' + (i === activeIdx ? ' active' : '');
+    chip.draggable = true;
+    chip.innerHTML =
+      `<span class="drag-handle" title="拖动排序">⠿</span>` +
+      `<input class="stock-name-input" value="${s.name}" maxlength="16" title="点击编辑名称">` +
+      `<button class="btn-del" title="删除">✕</button>`;
+
+    const nameInput = chip.querySelector('.stock-name-input');
+    nameInput.addEventListener('mousedown', () => selectStock(i));
+    chip.querySelector('.drag-handle').addEventListener('mousedown', () => selectStock(i));
+
+    nameInput.addEventListener('blur', () => {
+      const val = nameInput.value.trim();
+      if (val && val !== stocks[i].name) { stocks[i].name = val; scheduleSave(); }
+      else if (!val) nameInput.value = stocks[i].name;
+    });
+    nameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') nameInput.blur();
+      if (e.key === 'Escape') { nameInput.value = stocks[i].name; nameInput.blur(); }
+    });
+
+    chip.querySelector('.btn-del').addEventListener('click', e => { e.stopPropagation(); deleteStock(i); });
+
+    chip.addEventListener('dragstart', e => {
+      dragSrc = i; e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => chip.classList.add('dragging'), 0);
+    });
+    chip.addEventListener('dragend', () => {
+      dragSrc = -1;
+      document.querySelectorAll('.stock-chip').forEach(c => c.classList.remove('dragging','drag-over'));
+    });
+    chip.addEventListener('dragover', e => {
+      e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.stock-chip').forEach(c => c.classList.remove('drag-over'));
+      if (i !== dragSrc) chip.classList.add('drag-over');
+    });
+    chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
+    chip.addEventListener('drop', e => {
+      e.preventDefault();
+      if (dragSrc < 0 || dragSrc === i) return;
+      const moved = stocks.splice(dragSrc, 1)[0];
+      stocks.splice(i, 0, moved);
+      if (activeIdx === dragSrc) activeIdx = i;
+      else if (dragSrc < activeIdx && i >= activeIdx) activeIdx--;
+      else if (dragSrc > activeIdx && i <= activeIdx) activeIdx++;
+      dragSrc = -1;
+      syncRadars(); renderList(); scheduleSave();
+    });
+
+    list.appendChild(chip);
+  });
+
+  count.textContent = `${stocks.length} / 6`;
+  btn.disabled = stocks.length >= 6;
+}
+
+document.getElementById('stockInput').addEventListener('keydown', e => { if (e.key === 'Enter') addStock(); });
+
+// 启动时加载数据
+loadData();
+</script>
+</body>
+</html>

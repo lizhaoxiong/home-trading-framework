@@ -1,0 +1,13 @@
+{
+  "name": "trading-framework",
+  "version": "1.0.0",
+  "description": "交易框架 - 审美 & 时机雷达图",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
