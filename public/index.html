@@ -370,7 +370,7 @@ function renderList() {
   stocks.forEach((s, i) => {
     const chip = document.createElement('div');
     chip.className = 'stock-chip' + (i === activeIdx ? ' active' : '');
-    chip.draggable = true;
+    chip.draggable = false; // 默认不可拖，只有按住把手才开启
     chip.innerHTML =
       `<span class="drag-handle" title="拖动排序">⠿</span>` +
       `<input class="stock-name-input" value="${s.name}" maxlength="16" title="点击编辑名称">` +
@@ -378,7 +378,12 @@ function renderList() {
 
     const nameInput = chip.querySelector('.stock-name-input');
     nameInput.addEventListener('mousedown', () => selectStock(i));
-    chip.querySelector('.drag-handle').addEventListener('mousedown', () => selectStock(i));
+
+    // 只有按住拖拽把手才启用 draggable
+    const handle = chip.querySelector('.drag-handle');
+    handle.addEventListener('mousedown', () => { selectStock(i); chip.draggable = true; });
+    handle.addEventListener('mouseup',   () => { chip.draggable = false; });
+    document.addEventListener('mouseup', () => { chip.draggable = false; }, { once: false });
 
     nameInput.addEventListener('blur', () => {
       const val = nameInput.value.trim();
@@ -397,6 +402,7 @@ function renderList() {
       setTimeout(() => chip.classList.add('dragging'), 0);
     });
     chip.addEventListener('dragend', () => {
+      chip.draggable = false;
       dragSrc = -1;
       document.querySelectorAll('.stock-chip').forEach(c => c.classList.remove('dragging','drag-over'));
     });
