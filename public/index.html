@@ -141,7 +141,7 @@
 <div class="frame">
   <div class="radar-card left">
     <div class="radar-title">审美</div>
-    <canvas id="radarLeft" width="300" height="300"></canvas>
+    <canvas id="radarLeft" width="420" height="420"></canvas>
   </div>
   <div class="center-block">
     <div class="vline"></div>
@@ -150,7 +150,7 @@
   </div>
   <div class="radar-card right">
     <div class="radar-title">时机</div>
-    <canvas id="radarRight" width="300" height="300"></canvas>
+    <canvas id="radarRight" width="420" height="420"></canvas>
   </div>
 </div>
 
@@ -177,7 +177,7 @@ class RadarChart {
     this.n = labels.length;
     this.W = this.canvas.width; this.H = this.canvas.height;
     this.cx = this.W / 2; this.cy = this.H / 2;
-    this.maxR = Math.min(this.W, this.H) / 2 - 52;
+    this.maxR = Math.min(this.W, this.H) / 2 - 110;
     this.angles = labels.map((_, i) => (Math.PI * 2 * i / this.n) - Math.PI / 2);
     this.dragging = -1;
     this.activeValues = null;
@@ -256,12 +256,12 @@ class RadarChart {
       }
     });
     angles.forEach((a,i) => {
-      const lR=maxR+30; const x=cx+lR*Math.cos(a),y=cy+lR*Math.sin(a);
+      const lR=maxR+38; const x=cx+lR*Math.cos(a),y=cy+lR*Math.sin(a);
       if (Math.cos(a)>0.3) ctx.textAlign='left'; else if (Math.cos(a)<-0.3) ctx.textAlign='right'; else ctx.textAlign='center';
       ctx.textBaseline='middle';
-      ctx.fillStyle='rgba(200,218,240,0.85)'; ctx.font='13px PingFang SC,Microsoft YaHei,sans-serif';
+      ctx.fillStyle='rgba(200,218,240,0.85)'; ctx.font='11px PingFang SC,Microsoft YaHei,sans-serif';
       ctx.fillText(this.labels[i],x,y);
-      if (has) { ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`; ctx.fillText(`${Math.round(vals[i]*100)}%`,x,y+14); }
+      if (has) { ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`; ctx.fillText(`${Math.round(vals[i]*100)}%`,x,y+13); }
     });
     ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
     ctx.fillStyle=has?`rgba(${rgb},0.9)`:'rgba(255,255,255,0.12)'; ctx.fill();
