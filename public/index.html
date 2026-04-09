@@ -27,17 +27,22 @@
     margin-bottom: 12px;
   }
 
-  /* 顶部独立雷达行 */
-  .top-row {
-    display: flex; justify-content: center; align-items: flex-start; gap: 0;
-    width: 100%; max-width: 1060px; margin-bottom: 0;
+  /* 主网格：左雷达列 | 股票中列 | 右雷达列 */
+  .main-grid {
+    display: grid;
+    grid-template-columns: auto 200px auto;
+    align-items: center;
+    width: 100%; max-width: 1160px;
   }
-  /* 主雷达行 */
-  .frame {
-    display: flex; justify-content: center; gap: 0;
-    align-items: start; width: 100%; max-width: 1060px;
-  }
+  .radar-col { display: flex; flex-direction: column; }
   .radar-card { display: flex; flex-direction: column; align-items: center; padding: 0; }
+  canvas { cursor: crosshair; display: block; }
+
+  /* 中间股票列 */
+  .stock-center-col {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    padding: 0 8px;
+  }
   canvas { cursor: crosshair; display: block; }
 
   /* 底部多列区 */
@@ -156,27 +161,35 @@
 <!-- 顶部标题 -->
 <div class="page-title">交易模式</div>
 
-<!-- 顶部独立雷达 -->
-<div class="top-row">
-  <div class="radar-card">
-    <canvas id="radarMoney" width="462" height="462"></canvas>
+<!-- 主网格：左雷达 | 股票 | 右雷达 -->
+<div class="main-grid">
+
+  <!-- 左列：赚钱效应 + 审美 -->
+  <div class="radar-col">
+    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
+    <div class="radar-card"><canvas id="radarLeft"  width="462" height="462"></canvas></div>
   </div>
-  <div class="radar-card">
-    <canvas id="radarRisk" width="462" height="462"></canvas>
+
+  <!-- 中列：股票列表 -->
+  <div class="stock-center-col">
+    <div class="list-header">股票</div>
+    <div class="item-list" id="stockList"></div>
+    <div class="add-row">
+      <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
+      <button class="add-btn" id="stockAddBtn" onclick="addItem('stock')">＋</button>
+      <span class="item-count" id="stockCount">0 / 6</span>
+    </div>
   </div>
+
+  <!-- 右列：风险 + 计划 -->
+  <div class="radar-col">
+    <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
+    <div class="radar-card"><canvas id="radarRight" width="462" height="462"></canvas></div>
+  </div>
+
 </div>
 
-<!-- 主雷达 -->
-<div class="frame">
-  <div class="radar-card">
-    <canvas id="radarLeft" width="462" height="462"></canvas>
-  </div>
-  <div class="radar-card">
-    <canvas id="radarRight" width="462" height="462"></canvas>
-  </div>
-</div>
-
-<!-- 底部：题材 + 股票 双列 -->
+<!-- 底部：题材 + 亏损来源 -->
 <div class="bottom-zone">
 
   <!-- 题材列表 -->
@@ -187,17 +200,6 @@
       <input class="add-input" id="themeInput" placeholder="输入题材名称" maxlength="16">
       <button class="add-btn" id="themeAddBtn" onclick="addItem('theme')">＋</button>
       <span class="item-count" id="themeCount">0 / 6</span>
-    </div>
-  </div>
-
-  <!-- 股票列表 -->
-  <div class="list-col">
-    <div class="list-header">股票</div>
-    <div class="item-list" id="stockList"></div>
-    <div class="add-row">
-      <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
-      <button class="add-btn" id="stockAddBtn" onclick="addItem('stock')">＋</button>
-      <span class="item-count" id="stockCount">0 / 6</span>
     </div>
   </div>
 
