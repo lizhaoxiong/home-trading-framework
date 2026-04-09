@@ -19,6 +19,17 @@
     user-select: none;
   }
 
+  /* ── 顶部独立雷达行 ── */
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: 8px;
+  }
+
+  /* ── 主雷达行 ── */
   .frame {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -26,18 +37,24 @@
     width: 100%;
     max-width: 960px;
   }
+
   .radar-card {
     display: flex; flex-direction: column; align-items: center;
-    padding: 16px 12px 8px;
+    padding: 12px 12px 8px;
   }
-  .radar-title { font-size: 20px; font-weight: 700; letter-spacing: 4px; margin-bottom: 12px; }
-  .left .radar-title  { color: #7ec8e3; }
+  .radar-title {
+    font-size: 18px; font-weight: 700; letter-spacing: 4px; margin-bottom: 8px;
+  }
+  .left  .radar-title { color: #7ec8e3; }
   .right .radar-title { color: #f0b87e; }
+  .money .radar-title { color: #6ddc8c; }
+  .risk  .radar-title { color: #ff7070; }
+
   canvas { cursor: crosshair; display: block; }
 
   .center-block {
     display: flex; flex-direction: column; align-items: center;
-    padding: 0 24px; padding-top: 48px;
+    padding: 0 24px; padding-top: 40px;
   }
   .center-label {
     font-size: 22px; font-weight: 900; letter-spacing: 6px;
@@ -51,23 +68,18 @@
   /* ── 股票区 ── */
   .stock-zone {
     width: 100%; max-width: 960px;
-    margin-top: 28px;
+    margin-top: 24px;
     display: flex; flex-direction: column; align-items: center; gap: 14px;
   }
   .conn-hint { font-size: 11px; color: #2a3548; letter-spacing: 1px; }
 
-  .stock-list {
-    display: flex; flex-direction: column; gap: 6px;
-    width: 300px; min-height: 10px;
-  }
+  .stock-list { display: flex; flex-direction: column; gap: 6px; width: 300px; min-height: 10px; }
 
   .stock-chip {
     display: flex; align-items: center;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; border: 1px solid rgba(255,255,255,0.07);
     background: rgba(255,255,255,0.04);
-    font-size: 13px; font-weight: 600;
-    color: #7a8eaa; letter-spacing: 1px;
+    font-size: 13px; font-weight: 600; color: #7a8eaa; letter-spacing: 1px;
     transition: background 0.15s, border-color 0.15s, opacity 0.15s;
     cursor: default; position: relative;
   }
@@ -76,11 +88,7 @@
   .stock-chip.drag-over { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.12); }
   .stock-chip.dragging { opacity: 0.35; }
 
-  .drag-handle {
-    padding: 10px 8px 10px 12px;
-    color: rgba(255,255,255,0.15);
-    font-size: 14px; cursor: grab; flex-shrink: 0; line-height: 1;
-  }
+  .drag-handle { padding: 10px 8px 10px 12px; color: rgba(255,255,255,0.15); font-size: 14px; cursor: grab; flex-shrink: 0; line-height: 1; }
   .drag-handle:active { cursor: grabbing; }
   .drag-handle:hover { color: rgba(255,255,255,0.4); }
 
@@ -98,8 +106,7 @@
   .btn-del {
     flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px; border: none;
     font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    background: rgba(255,80,80,0.08); color: rgba(255,100,100,0.5);
-    margin-right: 6px; transition: all 0.15s;
+    background: rgba(255,80,80,0.08); color: rgba(255,100,100,0.5); margin-right: 6px; transition: all 0.15s;
   }
   .btn-del:hover { background: rgba(255,80,80,0.22); color: #ff6060; }
 
@@ -123,13 +130,10 @@
   .add-btn:disabled { opacity: 0.2; cursor: default; }
   .stock-count { font-size: 11px; color: #2e3a52; letter-spacing: 1px; }
 
-  /* 保存状态指示 */
   .save-status {
     position: fixed; bottom: 18px; right: 22px;
-    font-size: 11px; letter-spacing: 1px;
-    padding: 5px 12px; border-radius: 20px;
-    transition: opacity 0.4s;
-    pointer-events: none;
+    font-size: 11px; letter-spacing: 1px; padding: 5px 12px; border-radius: 20px;
+    transition: opacity 0.4s; pointer-events: none;
   }
   .save-status.saving { background: rgba(255,200,80,0.12); color: rgba(255,200,80,0.7); opacity: 1; }
   .save-status.saved  { background: rgba(80,200,130,0.12); color: rgba(80,200,130,0.7); opacity: 1; }
@@ -138,6 +142,19 @@
 </head>
 <body>
 
+<!-- 顶部独立雷达：赚钱效应 + 风险 -->
+<div class="top-row">
+  <div class="radar-card money">
+    <div class="radar-title">赚钱效应</div>
+    <canvas id="radarMoney" width="420" height="420"></canvas>
+  </div>
+  <div class="radar-card risk">
+    <div class="radar-title">风险</div>
+    <canvas id="radarRisk" width="420" height="420"></canvas>
+  </div>
+</div>
+
+<!-- 主雷达：审美 + 交易模式 + 时机 -->
 <div class="frame">
   <div class="radar-card left">
     <div class="radar-title">审美</div>
@@ -154,8 +171,9 @@
   </div>
 </div>
 
+<!-- 股票列表 -->
 <div class="stock-zone">
-  <div class="conn-hint">每只股票同时对应左右两个雷达图 · 拖动排序</div>
+  <div class="conn-hint">每只股票同时对应审美 & 时机两个雷达图 · 拖动排序</div>
   <div class="stock-list" id="stockList"></div>
   <div class="add-row">
     <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
@@ -169,7 +187,7 @@
 <script>
 /* ─────────────── RadarChart ─────────────── */
 class RadarChart {
-  constructor(canvasId, labels, color, centerLabel, onDragEnd) {
+  constructor(canvasId, labels, color, centerLabel, onDragEnd, maxROffset) {
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext('2d');
     this.labels = labels; this.color = color; this.centerLabel = centerLabel;
@@ -177,7 +195,7 @@ class RadarChart {
     this.n = labels.length;
     this.W = this.canvas.width; this.H = this.canvas.height;
     this.cx = this.W / 2; this.cy = this.H / 2;
-    this.maxR = Math.min(this.W, this.H) / 2 - 110;
+    this.maxR = Math.min(this.W, this.H) / 2 - (maxROffset || 110);
     this.angles = labels.map((_, i) => (Math.PI * 2 * i / this.n) - Math.PI / 2);
     this.dragging = -1;
     this.activeValues = null;
@@ -221,27 +239,38 @@ class RadarChart {
     else this.dragging = -1;
   }
   rgb() { const m = this.color.match(/\d+/g); return `${m[0]},${m[1]},${m[2]}`; }
+
+  // 长标签自动换行（超过4字符拆成两行）
+  wrapLines(text) {
+    return text.length > 4 ? [text.slice(0, 4), text.slice(4)] : [text];
+  }
+
   draw() {
     const { ctx, cx, cy, maxR, n, angles } = this;
     const vals = this.activeValues || new Array(n).fill(0.5);
     const has = !!this.activeValues;
     const rgb = this.rgb();
     ctx.clearRect(0, 0, this.W, this.H);
+
+    // 网格
     for (let l = 1; l <= 4; l++) {
       const r = maxR * l / 4;
       ctx.beginPath();
       angles.forEach((a, i) => { const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
       ctx.closePath(); ctx.strokeStyle=`rgba(255,255,255,${0.03+l*0.025})`; ctx.lineWidth=1; ctx.stroke();
     }
+    // 轴线
     angles.forEach(a => {
       ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));
       ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1; ctx.stroke();
     });
+    // 多边形
     ctx.beginPath();
     angles.forEach((a,i) => { const r=maxR*vals[i]; const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
     ctx.closePath();
     ctx.fillStyle=has?`rgba(${rgb},0.14)`:`rgba(255,255,255,0.03)`; ctx.fill();
     ctx.strokeStyle=has?`rgba(${rgb},0.85)`:`rgba(255,255,255,0.1)`; ctx.lineWidth=has?2:1.5; ctx.stroke();
+    // 顶点
     angles.forEach((a,i) => {
       const p = this.getPointPos(i);
       if (has) {
@@ -255,14 +284,24 @@ class RadarChart {
         ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.fill();
       }
     });
+    // 标签（支持换行）
+    const lineH = 13;
     angles.forEach((a,i) => {
-      const lR=maxR+38; const x=cx+lR*Math.cos(a),y=cy+lR*Math.sin(a);
+      const lR=maxR+40; const x=cx+lR*Math.cos(a), y=cy+lR*Math.sin(a);
       if (Math.cos(a)>0.3) ctx.textAlign='left'; else if (Math.cos(a)<-0.3) ctx.textAlign='right'; else ctx.textAlign='center';
       ctx.textBaseline='middle';
+      const lines = this.wrapLines(this.labels[i]);
+      const totalH = (lines.length - 1) * lineH;
       ctx.fillStyle='rgba(200,218,240,0.85)'; ctx.font='11px PingFang SC,Microsoft YaHei,sans-serif';
-      ctx.fillText(this.labels[i],x,y);
-      if (has) { ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`; ctx.fillText(`${Math.round(vals[i]*100)}%`,x,y+13); }
+      lines.forEach((line, li) => {
+        ctx.fillText(line, x, y - totalH/2 + li * lineH);
+      });
+      if (has) {
+        ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`;
+        ctx.fillText(`${Math.round(vals[i]*100)}%`, x, y + totalH/2 + 12);
+      }
     });
+    // 中心点
     ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
     ctx.fillStyle=has?`rgba(${rgb},0.9)`:'rgba(255,255,255,0.12)'; ctx.fill();
     if (has) {
@@ -283,44 +322,60 @@ function scheduleSave() {
   showStatus('saving', '保存中…');
   saveTimer = setTimeout(saveData, 600);
 }
-
 function showStatus(cls, text) {
   clearTimeout(hideTimer);
   statusEl.className = `save-status ${cls}`;
   statusEl.textContent = text;
 }
-
 async function saveData() {
   try {
     await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stocks, activeIdx })
+      body: JSON.stringify({ stocks, activeIdx, moneyValues, riskValues })
     });
     showStatus('saved', '已保存 ✓');
     hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
-  } catch (e) {
-    showStatus('saving', '保存失败');
-  }
+  } catch (e) { showStatus('saving', '保存失败'); }
 }
-
 async function loadData() {
   try {
     const res = await fetch('/api/data');
     const data = await res.json();
-    stocks = data.stocks || [];
-    activeIdx = data.activeIdx ?? -1;
+    stocks    = data.stocks     || [];
+    activeIdx = data.activeIdx  ?? -1;
+    if (data.moneyValues) moneyValues.splice(0, 6, ...data.moneyValues);
+    if (data.riskValues)  riskValues.splice(0, 6,  ...data.riskValues);
     if (activeIdx >= stocks.length) activeIdx = stocks.length - 1;
     syncRadars();
     renderList();
-  } catch (e) {
-    stocks = []; activeIdx = -1;
-  }
+  } catch (e) { stocks = []; activeIdx = -1; }
+  // 独立雷达始终激活
+  radarMoney.setValues(moneyValues);
+  radarRisk.setValues(riskValues);
 }
 
 /* ─────────────── 初始化雷达 ─────────────── */
-const radarL = new RadarChart('radarLeft',  ['唯一辨识度','题材地位','冰点表现','顺势程度','超预期','主升突破'], 'rgba(126,200,227,1)', '审美', scheduleSave);
-const radarR = new RadarChart('radarRight', ['冰点','反人性','筹码换手','情绪周期','强弱转换','K线'], 'rgba(240,184,126,1)', '时机', scheduleSave);
+// 独立雷达（不关联个股）
+let moneyValues = new Array(6).fill(0.5);
+let riskValues  = new Array(6).fill(0.5);
+
+const radarMoney = new RadarChart('radarMoney',
+  ['连板打高度','创业板20cm','N字涨停突破','趋势加速高潮','低吸反核地天','人气抱团'],
+  'rgba(100,220,140,1)', '赚钱效应', scheduleSave, 115);
+
+const radarRisk = new RadarChart('radarRisk',
+  ['严重异动监管趋严','高度限制烂板天地','加速后连续跌停','拉萨包场散户接盘','双顶图形难看','亏钱效应开始'],
+  'rgba(255,100,100,1)', '风险', scheduleSave, 115);
+
+// 个股雷达
+const radarL = new RadarChart('radarLeft',
+  ['唯一辨识度','题材地位','冰点表现','顺势程度','超预期','主升突破'],
+  'rgba(126,200,227,1)', '审美', scheduleSave);
+
+const radarR = new RadarChart('radarRight',
+  ['冰点','反人性','筹码换手','情绪周期','强弱转换','K线'],
+  'rgba(240,184,126,1)', '时机', scheduleSave);
 
 /* ─────────────── 股票数据 ─────────────── */
 let stocks = [];
@@ -370,7 +425,7 @@ function renderList() {
   stocks.forEach((s, i) => {
     const chip = document.createElement('div');
     chip.className = 'stock-chip' + (i === activeIdx ? ' active' : '');
-    chip.draggable = false; // 默认不可拖，只有按住把手才开启
+    chip.draggable = false;
     chip.innerHTML =
       `<span class="drag-handle" title="拖动排序">⠿</span>` +
       `<input class="stock-name-input" value="${s.name}" maxlength="16" title="点击编辑名称">` +
@@ -379,11 +434,10 @@ function renderList() {
     const nameInput = chip.querySelector('.stock-name-input');
     nameInput.addEventListener('mousedown', () => selectStock(i));
 
-    // 只有按住拖拽把手才启用 draggable
     const handle = chip.querySelector('.drag-handle');
     handle.addEventListener('mousedown', () => { selectStock(i); chip.draggable = true; });
     handle.addEventListener('mouseup',   () => { chip.draggable = false; });
-    document.addEventListener('mouseup', () => { chip.draggable = false; }, { once: false });
+    document.addEventListener('mouseup', () => { chip.draggable = false; });
 
     nameInput.addEventListener('blur', () => {
       const val = nameInput.value.trim();
@@ -402,8 +456,7 @@ function renderList() {
       setTimeout(() => chip.classList.add('dragging'), 0);
     });
     chip.addEventListener('dragend', () => {
-      chip.draggable = false;
-      dragSrc = -1;
+      chip.draggable = false; dragSrc = -1;
       document.querySelectorAll('.stock-chip').forEach(c => c.classList.remove('dragging','drag-over'));
     });
     chip.addEventListener('dragover', e => {
@@ -433,7 +486,6 @@ function renderList() {
 
 document.getElementById('stockInput').addEventListener('keydown', e => { if (e.key === 'Enter') addStock(); });
 
-// 启动时加载数据
 loadData();
 </script>
 </body>
