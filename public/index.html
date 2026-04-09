@@ -42,11 +42,35 @@
   }
   .vline { width: 1px; height: 44px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.1), transparent); }
 
-  /* 底部双列区 */
+  /* 底部多列区 */
   .bottom-zone {
     width: 100%; max-width: 1060px;
     margin-top: 24px;
     display: flex; gap: 32px; justify-content: center; align-items: flex-start;
+  }
+
+  /* 亏损来源 */
+  .loss-col {
+    display: flex; flex-direction: column; gap: 14px;
+    min-width: 220px; max-width: 260px;
+  }
+  .loss-list {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .loss-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,80,80,0.08);
+    background: rgba(255,60,60,0.04);
+    font-size: 12px; color: #8a7a88; line-height: 1.5;
+    letter-spacing: 0.5px;
+  }
+  .loss-num {
+    flex-shrink: 0;
+    color: rgba(255,100,100,0.4);
+    font-size: 11px; font-weight: 700;
+    margin-top: 1px;
   }
   .list-col {
     display: flex; flex-direction: column; align-items: center; gap: 14px;
@@ -177,6 +201,21 @@
       <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
       <button class="add-btn" id="stockAddBtn" onclick="addItem('stock')">＋</button>
       <span class="item-count" id="stockCount">0 / 6</span>
+    </div>
+  </div>
+
+  <!-- 亏损来源 -->
+  <div class="loss-col">
+    <div class="list-header">亏损来源</div>
+    <div class="loss-list">
+      <div class="loss-item"><span class="loss-num">1</span><span>图形明显走弱不走，撤退不及时</span></div>
+      <div class="loss-item"><span class="loss-num">2</span><span>幻想心存侥幸，虚妄回本，不切实际心态</span></div>
+      <div class="loss-item"><span class="loss-num">3</span><span>无计划不复盘，随机买卖</span></div>
+      <div class="loss-item"><span class="loss-num">4</span><span>交易独立性，因上一笔交易错过下一笔交易</span></div>
+      <div class="loss-item"><span class="loss-num">6</span><span>方向有变，不及时调整</span></div>
+      <div class="loss-item"><span class="loss-num">7</span><span>频繁交易，不空仓，耐心等待</span></div>
+      <div class="loss-item"><span class="loss-num">8</span><span>不断找机会，什么肉都想吃，同追两兔子</span></div>
+      <div class="loss-item"><span class="loss-num">9</span><span>不知道自己赚什么钱，买入持有理由不充分</span></div>
     </div>
   </div>
 
