@@ -11,45 +11,22 @@
     color: #e0e6f0;
     font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 24px 16px;
     user-select: none;
   }
 
-  /* ── 顶部独立雷达行 ── */
+  /* 顶部独立雷达行 */
   .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 960px;
-    margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    width: 100%; max-width: 1060px; margin-bottom: 8px;
   }
-
-  /* ── 主雷达行 ── */
+  /* 主雷达行 */
   .frame {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: start;
-    width: 100%;
-    max-width: 960px;
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: start; width: 100%; max-width: 1060px;
   }
-
-  .radar-card {
-    display: flex; flex-direction: column; align-items: center;
-    padding: 12px 12px 8px;
-  }
-  .radar-title {
-    font-size: 18px; font-weight: 700; letter-spacing: 4px; margin-bottom: 8px;
-  }
-  .left  .radar-title { color: #7ec8e3; }
-  .right .radar-title { color: #f0b87e; }
-  .money .radar-title { color: #6ddc8c; }
-  .risk  .radar-title { color: #ff7070; }
-
+  .radar-card { display: flex; flex-direction: column; align-items: center; padding: 8px 12px; }
   canvas { cursor: crosshair; display: block; }
 
   .center-block {
@@ -65,43 +42,54 @@
   }
   .vline { width: 1px; height: 44px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.1), transparent); }
 
-  /* ── 股票区 ── */
-  .stock-zone {
-    width: 100%; max-width: 960px;
+  /* 底部双列区 */
+  .bottom-zone {
+    width: 100%; max-width: 1060px;
     margin-top: 24px;
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    display: flex; gap: 32px; justify-content: center; align-items: flex-start;
   }
-  .conn-hint { font-size: 11px; color: #2a3548; letter-spacing: 1px; }
+  .list-col {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    min-width: 260px;
+  }
+  .list-header {
+    font-size: 13px; font-weight: 700; letter-spacing: 3px;
+    color: rgba(255,255,255,0.25);
+  }
 
-  .stock-list { display: flex; flex-direction: column; gap: 6px; width: 300px; min-height: 10px; }
+  /* 列表 */
+  .item-list { display: flex; flex-direction: column; gap: 6px; width: 260px; min-height: 10px; }
 
-  .stock-chip {
+  .item-chip {
     display: flex; align-items: center;
     border-radius: 10px; border: 1px solid rgba(255,255,255,0.07);
     background: rgba(255,255,255,0.04);
     font-size: 13px; font-weight: 600; color: #7a8eaa; letter-spacing: 1px;
     transition: background 0.15s, border-color 0.15s, opacity 0.15s;
-    cursor: default; position: relative;
+    cursor: default;
   }
-  .stock-chip:hover { background: rgba(255,255,255,0.08); }
-  .stock-chip.active { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); color: #e8f0ff; }
-  .stock-chip.drag-over { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.12); }
-  .stock-chip.dragging { opacity: 0.35; }
+  .item-chip:hover { background: rgba(255,255,255,0.08); }
+  .item-chip.active { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); color: #e8f0ff; }
+  .item-chip.drag-over { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.12); }
+  .item-chip.dragging { opacity: 0.35; }
 
-  .drag-handle { padding: 10px 8px 10px 12px; color: rgba(255,255,255,0.15); font-size: 14px; cursor: grab; flex-shrink: 0; line-height: 1; }
+  .drag-handle {
+    padding: 10px 8px 10px 12px; color: rgba(255,255,255,0.15);
+    font-size: 14px; cursor: grab; flex-shrink: 0; line-height: 1;
+  }
   .drag-handle:active { cursor: grabbing; }
   .drag-handle:hover { color: rgba(255,255,255,0.4); }
 
-  .stock-name-input {
+  .item-name-input {
     flex: 1; margin: 5px 4px; padding: 4px 8px;
     background: transparent; border: 1px solid transparent; border-radius: 6px;
     color: #c8d8f0; font-size: 13px; font-weight: 600;
     font-family: inherit; letter-spacing: 1px; outline: none; min-width: 0;
     cursor: pointer; transition: border-color 0.15s, background 0.15s;
   }
-  .stock-name-input:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); }
-  .stock-name-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); cursor: text; }
-  .stock-chip.active .stock-name-input { color: #e8f0ff; }
+  .item-name-input:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); }
+  .item-name-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); cursor: text; }
+  .item-chip.active .item-name-input { color: #e8f0ff; }
 
   .btn-del {
     flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px; border: none;
@@ -114,7 +102,7 @@
   .add-input {
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px; padding: 8px 16px; color: #e0e6f0;
-    font-size: 13px; font-family: inherit; outline: none; width: 220px; text-align: center;
+    font-size: 13px; font-family: inherit; outline: none; width: 180px; text-align: center;
     transition: border-color 0.15s;
   }
   .add-input::placeholder { color: rgba(255,255,255,0.18); }
@@ -128,7 +116,7 @@
   .add-btn:hover { background: rgba(255,255,255,0.14); }
   .add-btn:active { transform: scale(0.9); }
   .add-btn:disabled { opacity: 0.2; cursor: default; }
-  .stock-count { font-size: 11px; color: #2e3a52; letter-spacing: 1px; }
+  .item-count { font-size: 11px; color: #2e3a52; letter-spacing: 1px; }
 
   .save-status {
     position: fixed; bottom: 18px; right: 22px;
@@ -142,44 +130,56 @@
 </head>
 <body>
 
-<!-- 顶部独立雷达：赚钱效应 + 风险 -->
+<!-- 顶部独立雷达 -->
 <div class="top-row">
-  <div class="radar-card money">
-    <div class="radar-title">赚钱效应</div>
-    <canvas id="radarMoney" width="420" height="420"></canvas>
+  <div class="radar-card">
+    <canvas id="radarMoney" width="462" height="462"></canvas>
   </div>
-  <div class="radar-card risk">
-    <div class="radar-title">风险</div>
-    <canvas id="radarRisk" width="420" height="420"></canvas>
+  <div class="radar-card">
+    <canvas id="radarRisk" width="462" height="462"></canvas>
   </div>
 </div>
 
-<!-- 主雷达：审美 + 交易模式 + 时机 -->
+<!-- 主雷达 -->
 <div class="frame">
-  <div class="radar-card left">
-    <div class="radar-title">审美</div>
-    <canvas id="radarLeft" width="420" height="420"></canvas>
+  <div class="radar-card">
+    <canvas id="radarLeft" width="462" height="462"></canvas>
   </div>
   <div class="center-block">
     <div class="vline"></div>
     <div class="center-label">交易模式</div>
     <div class="vline"></div>
   </div>
-  <div class="radar-card right">
-    <div class="radar-title">时机</div>
-    <canvas id="radarRight" width="420" height="420"></canvas>
+  <div class="radar-card">
+    <canvas id="radarRight" width="462" height="462"></canvas>
   </div>
 </div>
 
-<!-- 股票列表 -->
-<div class="stock-zone">
-  <div class="conn-hint">每只股票同时对应审美 & 时机两个雷达图 · 拖动排序</div>
-  <div class="stock-list" id="stockList"></div>
-  <div class="add-row">
-    <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
-    <button class="add-btn" id="addBtn" onclick="addStock()">＋</button>
-    <span class="stock-count" id="stockCount">0 / 6</span>
+<!-- 底部：题材 + 股票 双列 -->
+<div class="bottom-zone">
+
+  <!-- 题材列表 -->
+  <div class="list-col">
+    <div class="list-header">题材</div>
+    <div class="item-list" id="themeList"></div>
+    <div class="add-row">
+      <input class="add-input" id="themeInput" placeholder="输入题材名称" maxlength="16">
+      <button class="add-btn" id="themeAddBtn" onclick="addItem('theme')">＋</button>
+      <span class="item-count" id="themeCount">0 / 6</span>
+    </div>
   </div>
+
+  <!-- 股票列表 -->
+  <div class="list-col">
+    <div class="list-header">股票</div>
+    <div class="item-list" id="stockList"></div>
+    <div class="add-row">
+      <input class="add-input" id="stockInput" placeholder="输入股票名称" maxlength="16">
+      <button class="add-btn" id="stockAddBtn" onclick="addItem('stock')">＋</button>
+      <span class="item-count" id="stockCount">0 / 6</span>
+    </div>
+  </div>
+
 </div>
 
 <div class="save-status hidden" id="saveStatus"></div>
@@ -195,7 +195,7 @@ class RadarChart {
     this.n = labels.length;
     this.W = this.canvas.width; this.H = this.canvas.height;
     this.cx = this.W / 2; this.cy = this.H / 2;
-    this.maxR = Math.min(this.W, this.H) / 2 - (maxROffset || 110);
+    this.maxR = Math.min(this.W, this.H) / 2 - (maxROffset || 115);
     this.angles = labels.map((_, i) => (Math.PI * 2 * i / this.n) - Math.PI / 2);
     this.dragging = -1;
     this.activeValues = null;
@@ -239,19 +239,15 @@ class RadarChart {
     else this.dragging = -1;
   }
   rgb() { const m = this.color.match(/\d+/g); return `${m[0]},${m[1]},${m[2]}`; }
-
-  // 长标签自动换行（超过4字符拆成两行）
   wrapLines(text) {
     return text.length > 4 ? [text.slice(0, 4), text.slice(4)] : [text];
   }
-
   draw() {
     const { ctx, cx, cy, maxR, n, angles } = this;
     const vals = this.activeValues || new Array(n).fill(0.5);
     const has = !!this.activeValues;
     const rgb = this.rgb();
     ctx.clearRect(0, 0, this.W, this.H);
-
     // 网格
     for (let l = 1; l <= 4; l++) {
       const r = maxR * l / 4;
@@ -284,31 +280,28 @@ class RadarChart {
         ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.fill();
       }
     });
-    // 标签（支持换行）
+    // 标签（自动换行）
     const lineH = 13;
     angles.forEach((a,i) => {
-      const lR=maxR+40; const x=cx+lR*Math.cos(a), y=cy+lR*Math.sin(a);
+      const lR=maxR+42; const x=cx+lR*Math.cos(a), y=cy+lR*Math.sin(a);
       if (Math.cos(a)>0.3) ctx.textAlign='left'; else if (Math.cos(a)<-0.3) ctx.textAlign='right'; else ctx.textAlign='center';
       ctx.textBaseline='middle';
       const lines = this.wrapLines(this.labels[i]);
       const totalH = (lines.length - 1) * lineH;
       ctx.fillStyle='rgba(200,218,240,0.85)'; ctx.font='11px PingFang SC,Microsoft YaHei,sans-serif';
-      lines.forEach((line, li) => {
-        ctx.fillText(line, x, y - totalH/2 + li * lineH);
-      });
+      lines.forEach((line, li) => ctx.fillText(line, x, y - totalH/2 + li * lineH));
       if (has) {
         ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`;
         ctx.fillText(`${Math.round(vals[i]*100)}%`, x, y + totalH/2 + 12);
       }
     });
-    // 中心点
+    // 中心标签（始终显示）
     ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
-    ctx.fillStyle=has?`rgba(${rgb},0.9)`:'rgba(255,255,255,0.12)'; ctx.fill();
-    if (has) {
-      ctx.font='bold 13px PingFang SC,Microsoft YaHei,sans-serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillStyle=`rgba(${rgb},1)`; ctx.fillText(this.centerLabel,cx,cy+20);
-    }
+    ctx.fillStyle=`rgba(${rgb},${has?0.9:0.25})`; ctx.fill();
+    ctx.font='bold 13px PingFang SC,Microsoft YaHei,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle=`rgba(${rgb},${has?1:0.3})`;
+    ctx.fillText(this.centerLabel, cx, cy+20);
   }
 }
 
@@ -332,7 +325,7 @@ async function saveData() {
     await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stocks, activeIdx, moneyValues, riskValues })
+      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues })
     });
     showStatus('saved', '已保存 ✓');
     hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
@@ -341,150 +334,172 @@ async function saveData() {
 async function loadData() {
   try {
     const res = await fetch('/api/data');
-    const data = await res.json();
-    stocks    = data.stocks     || [];
-    activeIdx = data.activeIdx  ?? -1;
-    if (data.moneyValues) moneyValues.splice(0, 6, ...data.moneyValues);
-    if (data.riskValues)  riskValues.splice(0, 6,  ...data.riskValues);
-    if (activeIdx >= stocks.length) activeIdx = stocks.length - 1;
+    const d = await res.json();
+    stocks         = d.stocks        || [];
+    themes         = d.themes        || [];
+    activeStockIdx = d.activeStockIdx ?? d.activeIdx ?? -1;
+    activeThemeIdx = d.activeThemeIdx ?? -1;
+    if (d.moneyValues) moneyValues.splice(0, 6, ...d.moneyValues);
+    if (d.riskValues)  riskValues.splice(0,  6, ...d.riskValues);
+    if (activeStockIdx >= stocks.length) activeStockIdx = stocks.length - 1;
+    if (activeThemeIdx >= themes.length) activeThemeIdx = themes.length - 1;
     syncRadars();
-    renderList();
-  } catch (e) { stocks = []; activeIdx = -1; }
-  // 独立雷达始终激活
+    renderList('stock');
+    renderList('theme');
+  } catch (e) { stocks = []; themes = []; activeStockIdx = -1; activeThemeIdx = -1; }
   radarMoney.setValues(moneyValues);
   radarRisk.setValues(riskValues);
 }
 
 /* ─────────────── 初始化雷达 ─────────────── */
-// 独立雷达（不关联个股）
 let moneyValues = new Array(6).fill(0.5);
 let riskValues  = new Array(6).fill(0.5);
 
 const radarMoney = new RadarChart('radarMoney',
   ['连板打高度','创业板20cm','N字涨停突破','趋势加速高潮','低吸反核地天','人气抱团'],
-  'rgba(100,220,140,1)', '赚钱效应', scheduleSave, 115);
+  'rgba(100,220,140,1)', '赚钱效应', scheduleSave, 120);
 
 const radarRisk = new RadarChart('radarRisk',
   ['严重异动监管趋严','高度限制烂板天地','加速后连续跌停','拉萨包场散户接盘','双顶图形难看','亏钱效应开始'],
-  'rgba(255,100,100,1)', '风险', scheduleSave, 115);
+  'rgba(255,100,100,1)', '风险', scheduleSave, 120);
 
-// 个股雷达
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','顺势程度','超预期','主升突破'],
-  'rgba(126,200,227,1)', '审美', scheduleSave);
+  'rgba(126,200,227,1)', '审美', scheduleSave, 115);
 
 const radarR = new RadarChart('radarRight',
   ['冰点','反人性','筹码换手','情绪周期','强弱转换','K线'],
-  'rgba(240,184,126,1)', '时机', scheduleSave);
+  'rgba(240,184,126,1)', '时机', scheduleSave, 115);
 
-/* ─────────────── 股票数据 ─────────────── */
-let stocks = [];
-let activeIdx = -1;
-
-function addStock() {
-  if (stocks.length >= 6) return;
-  const input = document.getElementById('stockInput');
-  const name = input.value.trim();
-  if (!name) { input.focus(); return; }
-  stocks.push({ name, valLeft: new Array(6).fill(0.5), valRight: new Array(6).fill(0.5) });
-  input.value = '';
-  activeIdx = stocks.length - 1;
-  syncRadars(); renderList(); scheduleSave();
-}
-
-function selectStock(idx) {
-  if (activeIdx === idx) return;
-  activeIdx = idx;
-  syncRadars();
-  document.querySelectorAll('.stock-chip').forEach((c, i) => c.classList.toggle('active', i === idx));
-  scheduleSave();
-}
-
-function deleteStock(idx) {
-  stocks.splice(idx, 1);
-  if (activeIdx >= stocks.length) activeIdx = stocks.length - 1;
-  syncRadars(); renderList(); scheduleSave();
-}
+/* ─────────────── 数据 ─────────────── */
+let stocks = [], themes = [];
+let activeStockIdx = -1, activeThemeIdx = -1;
 
 function syncRadars() {
-  if (activeIdx >= 0 && stocks[activeIdx]) {
-    radarL.setValues(stocks[activeIdx].valLeft);
-    radarR.setValues(stocks[activeIdx].valRight);
+  if (activeStockIdx >= 0 && stocks[activeStockIdx]) {
+    radarL.setValues(stocks[activeStockIdx].valLeft);
+    radarR.setValues(stocks[activeStockIdx].valRight);
   } else { radarL.clearValues(); radarR.clearValues(); }
 }
 
-/* ─────────────── 拖拽排序 ─────────────── */
-let dragSrc = -1;
+/* ─────────────── 通用列表操作 ─────────────── */
+function getListConfig(type) {
+  return type === 'stock'
+    ? { list: stocks, getActive: () => activeStockIdx, setActive: v => activeStockIdx = v, listId: 'stockList', inputId: 'stockInput', btnId: 'stockAddBtn', countId: 'stockCount' }
+    : { list: themes, getActive: () => activeThemeIdx, setActive: v => activeThemeIdx = v, listId: 'themeList', inputId: 'themeInput', btnId: 'themeAddBtn', countId: 'themeCount' };
+}
 
-function renderList() {
-  const list  = document.getElementById('stockList');
-  const count = document.getElementById('stockCount');
-  const btn   = document.getElementById('addBtn');
-  list.innerHTML = '';
+function addItem(type) {
+  const cfg = getListConfig(type);
+  if (cfg.list.length >= 6) return;
+  const input = document.getElementById(cfg.inputId);
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+  if (type === 'stock') {
+    cfg.list.push({ name, valLeft: new Array(6).fill(0.5), valRight: new Array(6).fill(0.5) });
+  } else {
+    cfg.list.push({ name });
+  }
+  input.value = '';
+  cfg.setActive(cfg.list.length - 1);
+  if (type === 'stock') syncRadars();
+  renderList(type); scheduleSave();
+}
 
-  stocks.forEach((s, i) => {
+function selectItem(type, idx) {
+  const cfg = getListConfig(type);
+  if (cfg.getActive() === idx) return;
+  cfg.setActive(idx);
+  if (type === 'stock') syncRadars();
+  document.querySelectorAll(`#${cfg.listId} .item-chip`).forEach((c, i) => c.classList.toggle('active', i === idx));
+  scheduleSave();
+}
+
+function deleteItem(type, idx) {
+  const cfg = getListConfig(type);
+  cfg.list.splice(idx, 1);
+  if (cfg.getActive() >= cfg.list.length) cfg.setActive(cfg.list.length - 1);
+  if (type === 'stock') syncRadars();
+  renderList(type); scheduleSave();
+}
+
+/* ─────────────── 渲染列表 ─────────────── */
+const dragState = { src: -1, type: null };
+
+function renderList(type) {
+  const cfg = getListConfig(type);
+  const listEl = document.getElementById(cfg.listId);
+  const countEl = document.getElementById(cfg.countId);
+  const btnEl = document.getElementById(cfg.btnId);
+  listEl.innerHTML = '';
+
+  cfg.list.forEach((s, i) => {
     const chip = document.createElement('div');
-    chip.className = 'stock-chip' + (i === activeIdx ? ' active' : '');
+    chip.className = 'item-chip' + (i === cfg.getActive() ? ' active' : '');
     chip.draggable = false;
     chip.innerHTML =
       `<span class="drag-handle" title="拖动排序">⠿</span>` +
-      `<input class="stock-name-input" value="${s.name}" maxlength="16" title="点击编辑名称">` +
+      `<input class="item-name-input" value="${s.name}" maxlength="16" title="点击编辑">` +
       `<button class="btn-del" title="删除">✕</button>`;
 
-    const nameInput = chip.querySelector('.stock-name-input');
-    nameInput.addEventListener('mousedown', () => selectStock(i));
+    const nameInput = chip.querySelector('.item-name-input');
+    nameInput.addEventListener('mousedown', () => selectItem(type, i));
 
     const handle = chip.querySelector('.drag-handle');
-    handle.addEventListener('mousedown', () => { selectStock(i); chip.draggable = true; });
+    handle.addEventListener('mousedown', () => { selectItem(type, i); chip.draggable = true; });
     handle.addEventListener('mouseup',   () => { chip.draggable = false; });
     document.addEventListener('mouseup', () => { chip.draggable = false; });
 
     nameInput.addEventListener('blur', () => {
       const val = nameInput.value.trim();
-      if (val && val !== stocks[i].name) { stocks[i].name = val; scheduleSave(); }
-      else if (!val) nameInput.value = stocks[i].name;
+      if (val && val !== s.name) { s.name = val; scheduleSave(); }
+      else if (!val) nameInput.value = s.name;
     });
     nameInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') nameInput.blur();
-      if (e.key === 'Escape') { nameInput.value = stocks[i].name; nameInput.blur(); }
+      if (e.key === 'Escape') { nameInput.value = s.name; nameInput.blur(); }
     });
 
-    chip.querySelector('.btn-del').addEventListener('click', e => { e.stopPropagation(); deleteStock(i); });
+    chip.querySelector('.btn-del').addEventListener('click', e => { e.stopPropagation(); deleteItem(type, i); });
 
     chip.addEventListener('dragstart', e => {
-      dragSrc = i; e.dataTransfer.effectAllowed = 'move';
+      dragState.src = i; dragState.type = type;
+      e.dataTransfer.effectAllowed = 'move';
       setTimeout(() => chip.classList.add('dragging'), 0);
     });
     chip.addEventListener('dragend', () => {
-      chip.draggable = false; dragSrc = -1;
-      document.querySelectorAll('.stock-chip').forEach(c => c.classList.remove('dragging','drag-over'));
+      chip.draggable = false; dragState.src = -1;
+      document.querySelectorAll('.item-chip').forEach(c => c.classList.remove('dragging','drag-over'));
     });
     chip.addEventListener('dragover', e => {
       e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-      document.querySelectorAll('.stock-chip').forEach(c => c.classList.remove('drag-over'));
-      if (i !== dragSrc) chip.classList.add('drag-over');
+      document.querySelectorAll(`#${cfg.listId} .item-chip`).forEach(c => c.classList.remove('drag-over'));
+      if (i !== dragState.src) chip.classList.add('drag-over');
     });
     chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
     chip.addEventListener('drop', e => {
       e.preventDefault();
-      if (dragSrc < 0 || dragSrc === i) return;
-      const moved = stocks.splice(dragSrc, 1)[0];
-      stocks.splice(i, 0, moved);
-      if (activeIdx === dragSrc) activeIdx = i;
-      else if (dragSrc < activeIdx && i >= activeIdx) activeIdx--;
-      else if (dragSrc > activeIdx && i <= activeIdx) activeIdx++;
-      dragSrc = -1;
-      syncRadars(); renderList(); scheduleSave();
+      if (dragState.src < 0 || dragState.src === i || dragState.type !== type) return;
+      const moved = cfg.list.splice(dragState.src, 1)[0];
+      cfg.list.splice(i, 0, moved);
+      const active = cfg.getActive();
+      if (active === dragState.src) cfg.setActive(i);
+      else if (dragState.src < active && i >= active) cfg.setActive(active - 1);
+      else if (dragState.src > active && i <= active) cfg.setActive(active + 1);
+      dragState.src = -1;
+      if (type === 'stock') syncRadars();
+      renderList(type); scheduleSave();
     });
 
-    list.appendChild(chip);
+    listEl.appendChild(chip);
   });
 
-  count.textContent = `${stocks.length} / 6`;
-  btn.disabled = stocks.length >= 6;
+  countEl.textContent = `${cfg.list.length} / 6`;
+  btnEl.disabled = cfg.list.length >= 6;
 }
 
-document.getElementById('stockInput').addEventListener('keydown', e => { if (e.key === 'Enter') addStock(); });
+document.getElementById('stockInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem('stock'); });
+document.getElementById('themeInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem('theme'); });
 
 loadData();
 </script>
