@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=1200, initial-scale=1.0, user-scalable=yes, minimum-scale=0.1, maximum-scale=10.0">
 <title>交易框架</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -242,8 +242,8 @@ class RadarChart {
     this.canvas.addEventListener('mousemove', e => this.onMove(e));
     this.canvas.addEventListener('mouseup',   () => this.onUp());
     this.canvas.addEventListener('mouseleave',() => this.onUp());
-    this.canvas.addEventListener('touchstart', e => { e.preventDefault(); this.onDown(e.touches[0]); }, { passive: false });
-    this.canvas.addEventListener('touchmove',  e => { e.preventDefault(); this.onMove(e.touches[0]); }, { passive: false });
+    this.canvas.addEventListener('touchstart', e => { if (e.touches.length === 1) { e.preventDefault(); this.onDown(e.touches[0]); } }, { passive: false });
+    this.canvas.addEventListener('touchmove',  e => { if (e.touches.length === 1) { e.preventDefault(); this.onMove(e.touches[0]); } }, { passive: false });
     this.canvas.addEventListener('touchend',   () => this.onUp());
     this.draw();
   }
