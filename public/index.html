@@ -224,6 +224,7 @@
       <div class="loss-item"><span class="loss-num">7</span><span>频繁交易，不空仓，耐心等待</span></div>
       <div class="loss-item"><span class="loss-num">8</span><span>不断找机会，什么肉都想吃，同追两兔子</span></div>
       <div class="loss-item"><span class="loss-num">9</span><span>不知道自己赚什么钱，买入持有理由不充分</span></div>
+      <div class="loss-item"><span class="loss-num">9</span><span>不敢买源头龙头反而去做联想套利</span></div>
     </div>
   </div>
 
@@ -403,16 +404,16 @@ let moneyValues = new Array(6).fill(0.5);
 let riskValues  = new Array(6).fill(0.5);
 
 const radarMoney = new RadarChart('radarMoney',
-  ['连板打高度','创业板20cm','N字涨停突破','趋势加速破前高','低吸反核地天','人气抱团'],
-  'rgba(100,220,140,1)', '赚钱效应', scheduleSave, 120);
+  ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','低吸反核博地天','创业板20cm','弱势行情抱团资金'],
+  'rgba(100,220,140,1)', '机会(买)', scheduleSave, 120);
 
 const radarRisk = new RadarChart('radarRisk',
-  ['严重异动监管趋严','高度限制烂板天地','加速高潮','拉萨包场散户接盘','日K分时图形难看','亏钱效应开始'],
-  'rgba(255,100,100,1)', '风险', scheduleSave, 120);
+  ['高位缺口放量抢跑','新低方向吸走资金','趋势高位加速高潮','严重异动监管趋严','上影双顶针刺破位','高位人气巅峰兑现'],
+  'rgba(255,100,100,1)', '风险(卖)', scheduleSave, 120);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
-  'rgba(126,200,227,1)', '审美', scheduleSave, 115);
+  'rgba(126,200,227,1)', '审美(选)', scheduleSave, 115);
 
 const radarR = new RadarChart('radarRight',
   ['早盘低吸','下午低吸','竞价买入','早盘跟随','早盘打板','空仓等待'],
