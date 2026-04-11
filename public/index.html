@@ -357,7 +357,7 @@ class RadarChart {
       const pos = this.getPos(e);
       for (let i = 0; i < this.n; i++) {
         const p = this.getPointPos(i);
-        if ((pos.x-p.x)**2 + (pos.y-p.y)**2 < 256) {
+        if ((pos.x-p.x)**2 + (pos.y-p.y)**2 < 400) {
           this.checks[i] = this.checks[i] ? 0 : 1;
           this.draw();
           this.onDragEnd && this.onDragEnd();
