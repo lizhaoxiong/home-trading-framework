@@ -262,7 +262,7 @@
 <script>
 /* ─────────────── RadarChart ─────────────── */
 class RadarChart {
-  constructor(canvasId, labels, color, centerLabel, onDragEnd, maxROffset) {
+  constructor(canvasId, labels, color, centerLabel, onDragEnd, maxROffset, checkMode) {
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext('2d');
     this.labels = labels; this.color = color; this.centerLabel = centerLabel;
@@ -274,6 +274,8 @@ class RadarChart {
     this.angles = labels.map((_, i) => (Math.PI * 2 * i / this.n) - Math.PI / 2);
     this.dragging = -1;
     this.activeValues = null;
+    this.checkMode = !!checkMode;
+    if (this.checkMode) { this.checks = new Array(this.n).fill(0); }
     this.canvas.addEventListener('mousedown', e => this.onDown(e));
     this.canvas.addEventListener('mousemove', e => this.onMove(e));
     this.canvas.addEventListener('mouseup',   () => this.onUp());
@@ -294,6 +296,19 @@ class RadarChart {
     return { x: this.cx + this.maxR * v * Math.cos(this.angles[i]), y: this.cy + this.maxR * v * Math.sin(this.angles[i]) };
   }
   onDown(e) {
+    if (this.checkMode && this.activeValues) {
+      const pos = this.getPos(e);
+      for (let i = 0; i < this.n; i++) {
+        const p = this.getPointPos(i);
+        if ((pos.x-p.x)**2 + (pos.y-p.y)**2 < 256) {
+          this.checks[i] = this.checks[i] ? 0 : 1;
+          this.draw();
+          this.onDragEnd && this.onDragEnd();
+          return;
+        }
+      }
+      return;
+    }
     if (!this.activeValues) return;
     const pos = this.getPos(e);
     for (let i = 0; i < this.n; i++) {
@@ -302,6 +317,7 @@ class RadarChart {
     }
   }
   onMove(e) {
+    if (this.checkMode) return;
     if (this.dragging < 0 || !this.activeValues) return;
     const pos = this.getPos(e);
     const a = this.angles[this.dragging];
@@ -339,18 +355,37 @@ class RadarChart {
     ctx.beginPath();
     angles.forEach((a,i) => { const r=maxR*vals[i]; const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
     ctx.closePath();
-    ctx.fillStyle=has?`rgba(${rgb},0.14)`:`rgba(255,255,255,0.03)`; ctx.fill();
-    ctx.strokeStyle=has?`rgba(${rgb},0.85)`:`rgba(255,255,255,0.1)`; ctx.lineWidth=has?2:1.5; ctx.stroke();
+    // checkMode: 全实心时背景变绿色
+    if (this.checkMode && this.checks && this.checks.every(c => c === 1)) {
+      ctx.fillStyle='rgba(100,220,140,0.14)'; ctx.fill();
+      ctx.strokeStyle=`rgba(100,220,140,0.85)`; ctx.lineWidth=2; ctx.stroke();
+    } else {
+      ctx.fillStyle=has?`rgba(${rgb},0.14)`:`rgba(255,255,255,0.03)`; ctx.fill();
+      ctx.strokeStyle=has?`rgba(${rgb},0.85)`:`rgba(255,255,255,0.1)`; ctx.lineWidth=has?2:1.5; ctx.stroke();
+    }
     // 顶点
     angles.forEach((a,i) => {
       const p = this.getPointPos(i);
       if (has) {
-        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,10);
-        g.addColorStop(0,`rgba(${rgb},0.5)`); g.addColorStop(1,`rgba(${rgb},0)`);
-        ctx.beginPath(); ctx.arc(p.x,p.y,10,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
-        ctx.beginPath(); ctx.arc(p.x,p.y,this.dragging===i?7:5,0,Math.PI*2);
-        ctx.fillStyle=`rgba(${rgb},1)`; ctx.fill();
-        ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
+        if (this.checkMode) {
+          // checkMode: 空心/实心切换
+          const checked = this.checks && this.checks[i] === 1;
+          if (checked) {
+            ctx.beginPath(); ctx.arc(p.x,p.y,6,0,Math.PI*2);
+            ctx.fillStyle=`rgba(${rgb},1)`; ctx.fill();
+            ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
+          } else {
+            ctx.beginPath(); ctx.arc(p.x,p.y,6,0,Math.PI*2);
+            ctx.strokeStyle=`rgba(${rgb},0.8)`; ctx.lineWidth=2; ctx.stroke();
+          }
+        } else {
+          const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,10);
+          g.addColorStop(0,`rgba(${rgb},0.5)`); g.addColorStop(1,`rgba(${rgb},0)`);
+          ctx.beginPath(); ctx.arc(p.x,p.y,10,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+          ctx.beginPath(); ctx.arc(p.x,p.y,this.dragging===i?7:5,0,Math.PI*2);
+          ctx.fillStyle=`rgba(${rgb},1)`; ctx.fill();
+          ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
+        }
       } else {
         ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.fill();
       }
@@ -400,7 +435,7 @@ async function saveData() {
     await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues })
+      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues, riskChecks, lowRiskChecks })
     });
     showStatus('saved', '已保存 ✓');
     hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
@@ -417,6 +452,8 @@ async function loadData() {
     if (d.moneyValues) moneyValues.splice(0, 6, ...d.moneyValues);
     if (d.riskValues)  riskValues.splice(0,  6, ...d.riskValues);
     if (d.lowRiskValues) lowRiskValues.splice(0, 6, ...d.lowRiskValues);
+    if (d.riskChecks) riskChecks.splice(0, 6, ...d.riskChecks);
+    if (d.lowRiskChecks) lowRiskChecks.splice(0, 6, ...d.lowRiskChecks);
     if (activeStockIdx >= stocks.length) activeStockIdx = stocks.length - 1;
     if (activeThemeIdx >= themes.length) activeThemeIdx = themes.length - 1;
     syncRadars();
@@ -426,12 +463,18 @@ async function loadData() {
   radarMoney.setValues(moneyValues);
   radarRisk.setValues(riskValues);
   radarLowRisk.setValues(lowRiskValues);
+  radarRisk.checks = riskChecks;
+  radarLowRisk.checks = lowRiskChecks;
+  radarRisk.draw();
+  radarLowRisk.draw();
 }
 
 /* ─────────────── 初始化雷达 ─────────────── */
 let moneyValues = new Array(6).fill(0.5);
 let riskValues  = new Array(6).fill(0.5);
 let lowRiskValues = new Array(6).fill(0.5);
+let riskChecks = new Array(6).fill(0);
+let lowRiskChecks = new Array(6).fill(0);
 
 const radarMoney = new RadarChart('radarMoney',
   ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','龙头超跌博反弹','新方向试错博发酵','弱势行情抱团资金'],
@@ -439,11 +482,11 @@ const radarMoney = new RadarChart('radarMoney',
 
 const radarRisk = new RadarChart('radarRisk',
   ['高位缺口放量抢跑','新低方向吸走资金','趋势高位加速高潮','严重异动监管趋严','上影双顶针刺破位','高位人气巅峰兑现'],
-  'rgba(255,100,100,1)', '高位风险', scheduleSave, 120);
+  'rgba(255,100,100,1)', '高位风险', scheduleSave, 120, true);
 
 const radarLowRisk = new RadarChart('radarLowRisk',
   ['时间成本','暴力洗盘','小题材一日游','龙头强势涨停','2点后针刺','趋势向下新低'],
-  'rgba(255,100,100,1)', '低位风险', scheduleSave, 120);
+  'rgba(255,100,100,1)', '低位风险', scheduleSave, 120, true);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
