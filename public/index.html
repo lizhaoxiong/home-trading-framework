@@ -231,7 +231,7 @@
 
   <div class="free-card" id="cardLeft">
     <span class="drag-hint">拖动</span>
-    <canvas id="radarLeft" width="462" height="462"></canvas>
+    <canvas id="radarLeft" width="260" height="260"></canvas>
   </div>
 
   <div class="free-card" id="cardHighOpp">
@@ -550,7 +550,7 @@ const radarHighOpp = new RadarChart('radarHighOpp',
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
-  'rgba(126,200,227,1)', '审美(选)', scheduleSave, 115);
+  'rgba(126,200,227,1)', '审美(选)', scheduleSave, 50);
 
 const radarR = new RadarChart('radarRight',
   ['早盘低吸','下午低吸','竞价买入','早盘跟随','早盘打板','空仓等待'],
@@ -690,7 +690,7 @@ document.getElementById('themeInput').addEventListener('keydown', e => { if (e.k
 const defaultPositions = {
   cardRisk:     { x: 0,    y: 0 },
   cardLowRisk:  { x: 520,  y: 0 },
-  cardLeft:     { x: 260,  y: 420 },
+  cardLeft:     { x: 330,  y: 460 },
   cardHighOpp:  { x: 0,    y: 880 },
   cardMoney:    { x: 520,  y: 880 },
   cardDivider1: { x: 440,  y: 200 },
