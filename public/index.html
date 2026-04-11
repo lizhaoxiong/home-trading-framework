@@ -35,7 +35,7 @@
     margin-bottom: 12px;
   }
 
-  /* 顶部居中：高位风险 + 低位风险 + 机(梭) */
+  /* 顶部居中：高位风险 + 低位风险 + 危(核)分隔 + 机(梭) */
   .top-radars {
     display: flex; flex-direction: column; align-items: center; gap: 0;
     width: 100%;
@@ -51,16 +51,17 @@
   .radar-divider {
     display: flex; align-items: center; gap: 12px;
     padding: 0 16px;
-    font-size: 13px; font-weight: 700; letter-spacing: 4px;
-    color: rgba(255,100,100,0.4);
+    font-size: 26px; font-weight: 900; letter-spacing: 4px;
+    color: rgba(200,30,30,0.8);
     white-space: nowrap;
   }
-  .radar-divider::before, .radar-divider::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, rgba(255,100,100,0.3), rgba(255,100,100,0.05));
+  .radar-divider::before {
+    content: ''; flex: 1; height: 2px;
+    background: linear-gradient(90deg, rgba(200,30,30,0.7), rgba(200,30,30,0.1));
   }
   .radar-divider::after {
-    background: linear-gradient(90deg, rgba(255,100,100,0.05), rgba(255,100,100,0.3));
+    content: ''; flex: 1; height: 2px;
+    background: linear-gradient(90deg, rgba(200,30,30,0.1), rgba(200,30,30,0.7));
   }
 
   /* 底部：审美 | 股票 | 计划 */
@@ -200,7 +201,7 @@
 <div class="top-radars">
   <div class="top-radars-row">
     <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
-    <div class="radar-divider">高位风险</div>
+    <div class="radar-divider">危(核)</div>
     <div class="radar-card"><canvas id="radarLowRisk" width="360" height="360"></canvas></div>
   </div>
   <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
