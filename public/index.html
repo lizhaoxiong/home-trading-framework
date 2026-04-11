@@ -55,6 +55,9 @@
     color: rgba(200,30,30,0.8);
     white-space: nowrap;
   }
+  #opportunityDivider {
+    color: rgba(100,220,140,0.8);
+  }
 
   /* 底部：审美 | 股票 | 计划 */
   .bottom-grid {
@@ -196,7 +199,11 @@
     <div class="radar-divider">&lt;---危(核)---&gt;</div>
     <div class="radar-card"><canvas id="radarLowRisk" width="462" height="462"></canvas></div>
   </div>
-  <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
+  <div class="top-radars-row">
+    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
+    <div class="radar-divider" id="opportunityDivider">&lt;---机(梭)---&gt;</div>
+    <div class="radar-card"><canvas id="radarHighOpp" width="462" height="462"></canvas></div>
+  </div>
 </div>
 
 <!-- 底部：审美 | 股票 | 计划 -->
@@ -436,7 +443,7 @@ async function saveData() {
     await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues, riskChecks, lowRiskChecks })
+      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues, highOppValues, riskChecks, lowRiskChecks, highOppChecks })
     });
     showStatus('saved', '已保存 ✓');
     hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
@@ -453,8 +460,10 @@ async function loadData() {
     if (d.moneyValues) moneyValues.splice(0, 6, ...d.moneyValues);
     if (d.riskValues)  riskValues.splice(0,  6, ...d.riskValues);
     if (d.lowRiskValues) lowRiskValues.splice(0, 6, ...d.lowRiskValues);
+    if (d.highOppValues) highOppValues.splice(0, 6, ...d.highOppValues);
     if (d.riskChecks) riskChecks.splice(0, 6, ...d.riskChecks);
     if (d.lowRiskChecks) lowRiskChecks.splice(0, 6, ...d.lowRiskChecks);
+    if (d.highOppChecks) highOppChecks.splice(0, 6, ...d.highOppChecks);
     if (activeStockIdx >= stocks.length) activeStockIdx = stocks.length - 1;
     if (activeThemeIdx >= themes.length) activeThemeIdx = themes.length - 1;
     syncRadars();
@@ -462,20 +471,25 @@ async function loadData() {
     renderList('theme');
   } catch (e) { stocks = []; themes = []; activeStockIdx = -1; activeThemeIdx = -1; }
   radarMoney.setValues(moneyValues);
+  radarHighOpp.setValues(highOppValues);
   radarRisk.setValues(riskValues);
   radarLowRisk.setValues(lowRiskValues);
   radarRisk.checks = riskChecks;
   radarLowRisk.checks = lowRiskChecks;
+  radarHighOpp.checks = highOppChecks;
   radarRisk.draw();
   radarLowRisk.draw();
+  radarHighOpp.draw();
 }
 
 /* ─────────────── 初始化雷达 ─────────────── */
 let moneyValues = new Array(6).fill(0.5);
 let riskValues  = new Array(6).fill(0.5);
 let lowRiskValues = new Array(6).fill(0.5);
+let highOppValues = new Array(6).fill(0.5);
 let riskChecks = new Array(6).fill(0);
 let lowRiskChecks = new Array(6).fill(0);
+let highOppChecks = new Array(6).fill(0);
 
 const radarMoney = new RadarChart('radarMoney',
   ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','龙头超跌博反弹','新方向试错博发酵','弱势行情抱团资金'],
@@ -488,6 +502,10 @@ const radarRisk = new RadarChart('radarRisk',
 const radarLowRisk = new RadarChart('radarLowRisk',
   ['时间成本','暴力洗盘','小题材一日游','龙头强势涨停','2点后针刺','趋势向下新低'],
   'rgba(255,100,100,1)', '低位风险', scheduleSave, 120, true);
+
+const radarHighOpp = new RadarChart('radarHighOpp',
+  ['龙头缩量连板','龙头换手连板','弱势行情抱团','趋势加速破前高','弱转强该弱不弱','龙头超跌博反弹'],
+  'rgba(100,220,140,1)', '高位机会', scheduleSave, 120, true);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
