@@ -76,7 +76,7 @@
   /* 中间股票列 */
   .stock-center-col {
     display: flex; flex-direction: column; align-items: center; gap: 10px;
-    padding: 0; width: 180px;
+    padding: 0; width: 260px;
   }
 
   /* 底部多列区 */
@@ -179,6 +179,38 @@
   .add-btn:active { transform: scale(0.9); }
   .add-btn:disabled { opacity: 0.2; cursor: default; }
   .item-count { font-size: 11px; color: #2e3a52; letter-spacing: 1px; }
+
+  .stock-sub {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 4px 0 2px 0;
+    margin: 2px 6px 4px;
+  }
+  .strategy-row {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #8a9ab0;
+  }
+  .strategy-label {
+    flex-shrink: 0; width: 56px;
+    text-align: right;
+    letter-spacing: 1px;
+  }
+  .strategy-input {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 4px 8px;
+    color: #c8d8f0;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    min-width: 0;
+    transition: border-color 0.15s;
+  }
+  .strategy-input:focus {
+    border-color: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.06);
+  }
 
   .save-status {
     position: fixed; bottom: 18px; right: 22px;
@@ -585,7 +617,7 @@ function addItem(type) {
   const name = input.value.trim();
   if (!name) { input.focus(); return; }
   if (type === 'stock') {
-    cfg.list.push({ name, valLeft: new Array(6).fill(0.5) });
+    cfg.list.push({ name, valLeft: new Array(6).fill(0.5), buySellStrategy: ['', ''] });
   } else {
     cfg.list.push({ name });
   }
@@ -630,6 +662,32 @@ function renderList(type) {
       `<span class="drag-handle" title="拖动排序">⠿</span>` +
       `<input class="item-name-input" value="${s.name}" maxlength="16" title="点击编辑">` +
       `<button class="btn-del" title="删除">✕</button>`;
+
+    // 股票子列表：买入/卖出策略
+    if (type === 'stock') {
+      if (!s.buySellStrategy) s.buySellStrategy = ['', ''];
+      const sub = document.createElement('div');
+      sub.className = 'stock-sub';
+      sub.innerHTML = `
+        <div class="strategy-row">
+          <span class="strategy-label">买入:</span>
+          <input class="strategy-input" data-idx="${i}" data-field="0" value="${s.buySellStrategy[0] || ''}" placeholder="输入买入策略">
+        </div>
+        <div class="strategy-row">
+          <span class="strategy-label">卖出:</span>
+          <input class="strategy-input" data-idx="${i}" data-field="1" value="${s.buySellStrategy[1] || ''}" placeholder="输入卖出策略">
+        </div>`;
+      chip.appendChild(sub);
+
+      sub.querySelectorAll('.strategy-input').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const fi = parseInt(inp.dataset.field);
+          cfg.list[parseInt(inp.dataset.idx)].buySellStrategy[fi] = inp.value;
+          scheduleSave();
+        });
+        inp.addEventListener('mousedown', e => e.stopPropagation());
+      });
+    }
 
     const nameInput = chip.querySelector('.item-name-input');
     nameInput.addEventListener('mousedown', () => selectItem(type, i));
@@ -702,6 +760,7 @@ document.getElementById('themeInput').addEventListener('keydown', e => { if (e.k
 
   function onStart(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+    if (e.target.closest('.strategy-input')) return;
     if (e.target.closest('.item-list') || e.target.closest('.item-chip')) return;
     dragging = true;
     const t = e.touches ? e.touches[0] : e;
