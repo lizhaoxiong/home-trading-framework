@@ -372,7 +372,7 @@ class RadarChart {
           const checked = this.checks && this.checks[i] === 1;
           if (checked) {
             ctx.beginPath(); ctx.arc(p.x,p.y,6,0,Math.PI*2);
-            ctx.fillStyle=`rgba(${rgb},1)`; ctx.fill();
+            ctx.fillStyle='rgba(100,220,140,1)'; ctx.fill();
             ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
           } else {
             ctx.beginPath(); ctx.arc(p.x,p.y,6,0,Math.PI*2);
