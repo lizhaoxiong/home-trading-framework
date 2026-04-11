@@ -200,9 +200,9 @@
     <div class="radar-card"><canvas id="radarLowRisk" width="462" height="462"></canvas></div>
   </div>
   <div class="top-radars-row">
-    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
-    <div class="radar-divider" id="opportunityDivider">&lt;---机(梭)---&gt;</div>
     <div class="radar-card"><canvas id="radarHighOpp" width="462" height="462"></canvas></div>
+    <div class="radar-divider" id="opportunityDivider">&lt;---低位机会---&gt;</div>
+    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
   </div>
 </div>
 
@@ -493,7 +493,7 @@ let highOppChecks = new Array(6).fill(0);
 
 const radarMoney = new RadarChart('radarMoney',
   ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','龙头超跌博反弹','新方向试错博发酵','弱势行情抱团资金'],
-  'rgba(100,220,140,1)', '机(梭)', scheduleSave, 120);
+  'rgba(100,220,140,1)', '低位机会', scheduleSave, 120);
 
 const radarRisk = new RadarChart('radarRisk',
   ['高位缺口放量抢跑','新低方向吸走资金','趋势高位加速高潮','严重异动监管趋严','上影双顶针刺破位','高位人气巅峰兑现'],
