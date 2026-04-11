@@ -712,7 +712,10 @@ function renderList(type) {
       if (e.key === 'Escape') { nameInput.value = s.name; nameInput.blur(); }
     });
 
-    chip.querySelector('.btn-del').addEventListener('click', e => { e.stopPropagation(); deleteItem(type, i); });
+    chip.querySelector('.btn-del').addEventListener('click', e => {
+      e.stopPropagation();
+      if (confirm(`确认删除「${s.name}」？`)) deleteItem(type, i);
+    });
 
     chip.addEventListener('dragstart', e => {
       dragState.src = i; dragState.type = type;
