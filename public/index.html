@@ -215,10 +215,11 @@
     z-index: 10;
     cursor: grab;
     background: rgba(255,255,255,0.01);
+    pointer-events: auto;
   }
   .drag-handle-area:active { cursor: grabbing; }
   #cardRisk, #cardLowRisk, #cardHighOpp, #cardMoney { z-index: 10; }
-  #radarLeft { pointer-events: none; }
+  #cardLeft { z-index: 20; }
   .free-card[draggable="true"], .free-card.draggable {
     cursor: grab;
   }
@@ -491,7 +492,7 @@ async function saveData() {
     await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues, highOppValues, riskChecks, lowRiskChecks, highOppChecks })
+      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues, highOppValues, riskChecks, lowRiskChecks, highOppChecks, moneyChecks, leftChecks })
     });
     showStatus('saved', '已保存 ✓');
     hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
@@ -512,6 +513,8 @@ async function loadData() {
     if (d.riskChecks) riskChecks.splice(0, 6, ...d.riskChecks);
     if (d.lowRiskChecks) lowRiskChecks.splice(0, 6, ...d.lowRiskChecks);
     if (d.highOppChecks) highOppChecks.splice(0, 6, ...d.highOppChecks);
+    if (d.moneyChecks) moneyChecks.splice(0, 6, ...d.moneyChecks);
+    if (d.leftChecks) leftChecks.splice(0, 6, ...d.leftChecks);
     if (activeStockIdx >= stocks.length) activeStockIdx = stocks.length - 1;
     if (activeThemeIdx >= themes.length) activeThemeIdx = themes.length - 1;
     syncRadars();
@@ -525,9 +528,13 @@ async function loadData() {
   radarRisk.checks = riskChecks;
   radarLowRisk.checks = lowRiskChecks;
   radarHighOpp.checks = highOppChecks;
+  radarMoney.checks = moneyChecks;
+  radarL.checks = leftChecks;
   radarRisk.draw();
   radarLowRisk.draw();
   radarHighOpp.draw();
+  radarMoney.draw();
+  radarL.draw();
 }
 
 /* ─────────────── 初始化雷达 ─────────────── */
@@ -538,10 +545,12 @@ let highOppValues = new Array(6).fill(0.5);
 let riskChecks = new Array(6).fill(0);
 let lowRiskChecks = new Array(6).fill(0);
 let highOppChecks = new Array(6).fill(0);
+let moneyChecks = new Array(6).fill(0);
+let leftChecks = new Array(6).fill(0);
 
 const radarMoney = new RadarChart('radarMoney',
   ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','龙头超跌博反弹','新方向试错博发酵','弱势行情抱团资金'],
-  'rgba(100,220,140,1)', '低位机会', scheduleSave, 120);
+  'rgba(100,220,140,1)', '低位机会', scheduleSave, 120, true);
 
 const radarRisk = new RadarChart('radarRisk',
   ['高位缺口放量抢跑','新低方向吸走资金','趋势高位加速高潮','严重异动监管趋严','上影双顶针刺破位','高位人气巅峰兑现'],
@@ -553,11 +562,11 @@ const radarLowRisk = new RadarChart('radarLowRisk',
 
 const radarHighOpp = new RadarChart('radarHighOpp',
   ['龙头缩量连板','龙头换手连板','弱势行情抱团','趋势博加速破前高','弱转强该弱不弱','龙头超跌博反弹'],
-  'rgba(100,220,140,1)', '高位机会', scheduleSave, 120);
+  'rgba(100,220,140,1)', '高位机会', scheduleSave, 120, true);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
-  'rgba(126,200,227,1)', '审美(选)', scheduleSave, 173);
+  'rgba(126,200,227,1)', '审美(挑)', scheduleSave, 173, true);
 
 /* ─────────────── 数据 ─────────────── */
 let stocks = [], themes = [];
