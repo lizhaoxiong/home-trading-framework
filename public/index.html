@@ -244,6 +244,16 @@
     <canvas id="radarMoney" width="462" height="462"></canvas>
   </div>
 
+  <div class="free-card" id="cardDivider1">
+    <span class="drag-hint">拖动</span>
+    <div class="radar-divider" style="font-size:20px; padding:8px 16px;">&lt;---危(核)---&gt;</div>
+  </div>
+
+  <div class="free-card" id="cardDivider2">
+    <span class="drag-hint">拖动</span>
+    <div class="radar-divider" id="opportunityDivider" style="font-size:20px; padding:8px 16px;">&lt;---机(梭)---&gt;</div>
+  </div>
+
   <div class="free-card" id="cardRight">
     <span class="drag-hint">拖动</span>
     <canvas id="radarRight" width="462" height="462"></canvas>
@@ -683,6 +693,8 @@ const defaultPositions = {
   cardLeft:     { x: 260,  y: 420 },
   cardHighOpp:  { x: 0,    y: 880 },
   cardMoney:    { x: 520,  y: 880 },
+  cardDivider1: { x: 440,  y: 200 },
+  cardDivider2: { x: 440,  y: 1100 },
   cardRight:    { x: 0,    y: 1340 },
   cardStock:    { x: 520,  y: 1340 },
   cardTheme:    { x: 0,    y: 1340 },
@@ -702,8 +714,7 @@ function initFreeLayout() {
     card.style.left = pos.x + 'px';
     card.style.top = pos.y + 'px';
 
-    // 分隔线不响应拖拽
-    if (id.startsWith('cardDivider')) return;
+    // 分隔线也可拖拽
 
     let dragging = false, startX, startY, origX, origY;
 
