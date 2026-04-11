@@ -40,12 +40,14 @@
     display: flex; flex-direction: column; align-items: center; gap: 0;
     width: 100%;
     margin-bottom: 8px;
+    margin-top: -50px;
   }
   .top-radars-row {
     display: flex; align-items: center; gap: 0;
     justify-content: center;
   }
   .top-radars .radar-card { display: flex; flex-direction: column; align-items: center; }
+  .top-radars .center-radar { margin-top: -10px; margin-bottom: -10px; }
   canvas { cursor: crosshair; display: block; }
 
   .radar-divider {
@@ -59,10 +61,10 @@
     color: rgba(100,220,140,0.8);
   }
 
-  /* 底部：审美 | 股票 | 计划 */
+  /* 底部：股票 | 计划 */
   .bottom-grid {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     width: 100%; max-width: 1160px;
     gap: 0;
@@ -190,7 +192,6 @@
 <body>
 
 <!-- 顶部标题 -->
-<div class="page-title">交易模式</div>
 
 <!-- 顶部居中：高位风险 + 低位风险 + 机(梭) -->
 <div class="top-radars">
@@ -199,20 +200,16 @@
     <div class="radar-divider">&lt;---危(核)---&gt;</div>
     <div class="radar-card"><canvas id="radarLowRisk" width="462" height="462"></canvas></div>
   </div>
+  <div class="radar-card center-radar"><canvas id="radarLeft" width="462" height="462"></canvas></div>
   <div class="top-radars-row">
     <div class="radar-card"><canvas id="radarHighOpp" width="462" height="462"></canvas></div>
-    <div class="radar-divider" id="opportunityDivider">&lt;---低位机会---&gt;</div>
+    <div class="radar-divider" id="opportunityDivider">&lt;---机(梭)---&gt;</div>
     <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
   </div>
 </div>
 
-<!-- 底部：审美 | 股票 | 计划 -->
+<!-- 底部：股票 | 计划 -->
 <div class="bottom-grid">
-
-  <!-- 左列：审美 -->
-  <div class="radar-col">
-    <div class="radar-card"><canvas id="radarLeft"  width="462" height="462"></canvas></div>
-  </div>
 
   <!-- 中列：股票列表 -->
   <div class="stock-center-col">
@@ -504,7 +501,7 @@ const radarLowRisk = new RadarChart('radarLowRisk',
   'rgba(255,100,100,1)', '低位风险', scheduleSave, 120, true);
 
 const radarHighOpp = new RadarChart('radarHighOpp',
-  ['龙头缩量连板','龙头换手连板','弱势行情抱团','趋势加速破前高','弱转强该弱不弱','龙头超跌博反弹'],
+  ['龙头缩量连板','龙头换手连板','弱势行情抱团','趋势博加速破前高','弱转强该弱不弱','龙头超跌博反弹'],
   'rgba(100,220,140,1)', '高位机会', scheduleSave, 120);
 
 const radarL = new RadarChart('radarLeft',
