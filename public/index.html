@@ -211,6 +211,12 @@
     outline: none;
     min-width: 0;
     transition: border-color 0.15s;
+    resize: vertical;
+  }
+  .strategy-textarea {
+    line-height: 1.4;
+    min-height: 2.8em;
+    vertical-align: top;
   }
   .strategy-input:focus {
     border-color: rgba(255,255,255,0.25);
@@ -676,7 +682,7 @@ function renderList(type) {
       sub.innerHTML = `
         <div class="strategy-row">
           <span class="strategy-label">买入:</span>
-          <input class="strategy-input" style="min-width:500px" data-idx="${i}" data-field="0" value="${s.buySellStrategy[0] || ''}" placeholder="输入买入策略">
+          <textarea class="strategy-input strategy-textarea" rows="2" style="min-width:500px" data-idx="${i}" data-field="0" placeholder="输入买入策略">${s.buySellStrategy[0] || ''}</textarea>
         </div>
         <div class="strategy-row">
           <span class="strategy-label">卖出:</span>
