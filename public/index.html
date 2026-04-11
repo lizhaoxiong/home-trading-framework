@@ -35,8 +35,17 @@
     margin-bottom: 12px;
   }
 
-  /* 主网格：左雷达列 | 股票中列 | 右雷达列 */
-  .main-grid {
+  /* 顶部居中：危(核) + 机(梭) */
+  .top-radars {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .top-radars .radar-card { display: flex; flex-direction: column; align-items: center; }
+  canvas { cursor: crosshair; display: block; }
+
+  /* 底部：审美 | 股票 | 计划 */
+  .bottom-grid {
     display: grid;
     grid-template-columns: auto auto auto;
     align-items: center;
@@ -45,14 +54,12 @@
   }
   .radar-col { display: flex; flex-direction: column; gap: 0; }
   .radar-card { display: flex; flex-direction: column; align-items: center; padding: 0; margin: 0; }
-  canvas { cursor: crosshair; display: block; }
 
   /* 中间股票列 */
   .stock-center-col {
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     padding: 0; width: 180px;
   }
-  canvas { cursor: crosshair; display: block; }
 
   /* 底部多列区 */
   .bottom-zone {
@@ -170,12 +177,17 @@
 <!-- 顶部标题 -->
 <div class="page-title">交易模式</div>
 
-<!-- 主网格：左雷达 | 股票 | 右雷达 -->
-<div class="main-grid">
+<!-- 顶部居中：危(核) + 机(梭) -->
+<div class="top-radars">
+  <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
+  <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
+</div>
 
-  <!-- 左列：危(核) + 审美 -->
+<!-- 底部：审美 | 股票 | 计划 -->
+<div class="bottom-grid">
+
+  <!-- 左列：审美 -->
   <div class="radar-col">
-    <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
     <div class="radar-card"><canvas id="radarLeft"  width="462" height="462"></canvas></div>
   </div>
 
@@ -190,9 +202,8 @@
     </div>
   </div>
 
-  <!-- 右列：机(梭) + 计划 -->
+  <!-- 右列：计划 -->
   <div class="radar-col">
-    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
     <div class="radar-card"><canvas id="radarRight" width="462" height="462"></canvas></div>
   </div>
 
