@@ -219,7 +219,6 @@
   }
   .drag-handle-area:active { cursor: grabbing; }
   #cardRisk, #cardLowRisk, #cardHighOpp, #cardMoney { z-index: 10; }
-  #cardLeft { z-index: 20; }
   .free-card[draggable="true"], .free-card.draggable {
     cursor: grab;
   }
@@ -234,6 +233,20 @@
 
   <div class="free-card" id="cardRisk" style="left:0;top:0;">
     <canvas id="radarRisk"  width="462" height="462"></canvas>
+  </div>
+
+  <div class="free-card" id="cardLowRisk" style="left:600px;top:0;">
+    <canvas id="radarLowRisk" width="462" height="462"></canvas>
+  </div>
+
+  <div class="free-card" id="cardHighOpp" style="left:0;top:520px;">
+    <canvas id="radarHighOpp" width="462" height="462"></canvas>
+  </div>
+
+  <div class="connector-line opp-line" style="left:231px;top:751px;"></div>
+
+  <div class="free-card" id="cardMoney" style="left:600px;top:520px;">
+    <canvas id="radarMoney" width="462" height="462"></canvas>
   </div>
 
   <svg class="connector-svg" viewBox="0 0 1200 2100" fill="none" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:1200px;height:2100px;pointer-events:none;">
@@ -254,23 +267,9 @@
     <text x="531" y="744" text-anchor="middle" fill="rgba(100,220,140,0.7)" font-size="14" font-weight="bold" letter-spacing="3" font-family="PingFang SC,Microsoft YaHei,sans-serif">机(梭)</text>
   </svg>
 
-  <div class="free-card" id="cardLowRisk" style="left:600px;top:0;">
-    <canvas id="radarLowRisk" width="462" height="462"></canvas>
-  </div>
-
   <div class="free-card" id="cardLeft" style="left:300px;top:1040px;">
     <div class="drag-handle-area" id="leftDragHandle"></div>
     <canvas id="radarLeft" width="462" height="462"></canvas>
-  </div>
-
-  <div class="free-card" id="cardHighOpp" style="left:0;top:520px;">
-    <canvas id="radarHighOpp" width="462" height="462"></canvas>
-  </div>
-
-  <div class="connector-line opp-line" style="left:231px;top:751px;"></div>
-
-  <div class="free-card" id="cardMoney" style="left:600px;top:520px;">
-    <canvas id="radarMoney" width="462" height="462"></canvas>
   </div>
 
   <div class="free-card draggable" id="cardStock" style="left:300px;top:1500px;">
