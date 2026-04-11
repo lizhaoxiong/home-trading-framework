@@ -35,11 +35,15 @@
     margin-bottom: 12px;
   }
 
-  /* 顶部居中：危(核) + 机(梭) */
+  /* 顶部居中：危(核) + 低位风险 + 机(梭) */
   .top-radars {
     display: flex; flex-direction: column; align-items: center; gap: 0;
     width: 100%;
     margin-bottom: 8px;
+  }
+  .top-radars-row {
+    display: flex; align-items: center; gap: 0;
+    justify-content: center;
   }
   .top-radars .radar-card { display: flex; flex-direction: column; align-items: center; }
   canvas { cursor: crosshair; display: block; }
@@ -177,9 +181,12 @@
 <!-- 顶部标题 -->
 <div class="page-title">交易模式</div>
 
-<!-- 顶部居中：危(核) + 机(梭) -->
+<!-- 顶部居中：危(核) + 低位风险 + 机(梭) -->
 <div class="top-radars">
-  <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
+  <div class="top-radars-row">
+    <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
+    <div class="radar-card"><canvas id="radarLowRisk" width="360" height="360"></canvas></div>
+  </div>
   <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
 </div>
 
@@ -384,7 +391,7 @@ async function saveData() {
     await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues })
+      body: JSON.stringify({ stocks, activeStockIdx, themes, activeThemeIdx, moneyValues, riskValues, lowRiskValues })
     });
     showStatus('saved', '已保存 ✓');
     hideTimer = setTimeout(() => { statusEl.className = 'save-status hidden'; }, 2000);
@@ -400,6 +407,7 @@ async function loadData() {
     activeThemeIdx = d.activeThemeIdx ?? -1;
     if (d.moneyValues) moneyValues.splice(0, 6, ...d.moneyValues);
     if (d.riskValues)  riskValues.splice(0,  6, ...d.riskValues);
+    if (d.lowRiskValues) lowRiskValues.splice(0, 6, ...d.lowRiskValues);
     if (activeStockIdx >= stocks.length) activeStockIdx = stocks.length - 1;
     if (activeThemeIdx >= themes.length) activeThemeIdx = themes.length - 1;
     syncRadars();
@@ -408,11 +416,13 @@ async function loadData() {
   } catch (e) { stocks = []; themes = []; activeStockIdx = -1; activeThemeIdx = -1; }
   radarMoney.setValues(moneyValues);
   radarRisk.setValues(riskValues);
+  radarLowRisk.setValues(lowRiskValues);
 }
 
 /* ─────────────── 初始化雷达 ─────────────── */
 let moneyValues = new Array(6).fill(0.5);
 let riskValues  = new Array(6).fill(0.5);
+let lowRiskValues = new Array(6).fill(0.5);
 
 const radarMoney = new RadarChart('radarMoney',
   ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','龙头超跌博反弹','新方向试错博发酵','弱势行情抱团资金'],
@@ -421,6 +431,10 @@ const radarMoney = new RadarChart('radarMoney',
 const radarRisk = new RadarChart('radarRisk',
   ['高位缺口放量抢跑','新低方向吸走资金','趋势高位加速高潮','严重异动监管趋严','上影双顶针刺破位','高位人气巅峰兑现'],
   'rgba(255,100,100,1)', '危(核)', scheduleSave, 120);
+
+const radarLowRisk = new RadarChart('radarLowRisk',
+  ['时间成本','暴力洗盘','小题材一日游','龙头强势涨停','2点后针刺','趋势向下新低'],
+  'rgba(255,100,100,1)', '低位风险', scheduleSave, 100);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
