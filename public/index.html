@@ -194,7 +194,7 @@
   <div class="top-radars-row">
     <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
     <div class="radar-divider">&lt;---危(核)---&gt;</div>
-    <div class="radar-card"><canvas id="radarLowRisk" width="360" height="360"></canvas></div>
+    <div class="radar-card"><canvas id="radarLowRisk" width="462" height="462"></canvas></div>
   </div>
   <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
 </div>
@@ -443,7 +443,7 @@ const radarRisk = new RadarChart('radarRisk',
 
 const radarLowRisk = new RadarChart('radarLowRisk',
   ['时间成本','暴力洗盘','小题材一日游','龙头强势涨停','2点后针刺','趋势向下新低'],
-  'rgba(255,100,100,1)', '低位风险', scheduleSave, 100);
+  'rgba(255,100,100,1)', '低位风险', scheduleSave, 120);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
