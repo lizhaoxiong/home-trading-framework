@@ -198,6 +198,16 @@
   }
   .free-card {
     position: absolute;
+    transition: opacity 0.15s;
+  }
+  .free-card.drag-hint-active { cursor: grab; }
+  .free-card .drag-label {
+    position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: rgba(255,255,255,0.12); letter-spacing: 2px;
+    pointer-events: none;
+  }
+  .free-card[draggable="true"], .free-card.draggable {
+    cursor: grab;
   }
 </style>
 </head>
@@ -216,7 +226,7 @@
     <canvas id="radarLowRisk" width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card" id="cardLeft" style="left:300px;top:1040px;">
+  <div class="free-card draggable" id="cardLeft" style="left:300px;top:1040px;">
     <canvas id="radarLeft" width="462" height="462"></canvas>
   </div>
 
@@ -236,7 +246,7 @@
     <div class="radar-divider" id="opportunityDivider" style="font-size:20px; padding:8px 16px;">&lt;---机(梭)---&gt;</div>
   </div>
 
-  <div class="free-card" id="cardStock" style="left:300px;top:1500px;">
+  <div class="free-card draggable" id="cardStock" style="left:300px;top:1500px;">
     <div class="stock-center-col">
       <div class="list-header">股票</div>
       <div class="item-list" id="stockList"></div>
@@ -248,7 +258,7 @@
     </div>
   </div>
 
-  <div class="free-card" id="cardTheme" style="left:0;top:1500px;">
+  <div class="free-card draggable" id="cardTheme" style="left:0;top:1500px;">
     <div class="list-col">
       <div class="list-header">题材</div>
       <div class="item-list" id="themeList"></div>
@@ -651,6 +661,57 @@ function renderList(type) {
 
 document.getElementById('stockInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem('stock'); });
 document.getElementById('themeInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem('theme'); });
+
+/* ─────────────── 可拖拽元素 ─────────────── */
+['cardLeft', 'cardStock', 'cardTheme'].forEach(id => {
+  const card = document.getElementById(id);
+  if (!card) return;
+  let dragging = false, startX, startY, origX, origY;
+
+  card.style.cursor = 'grab';
+
+  function onStart(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+    if (e.target.closest('.item-list') || e.target.closest('.item-chip')) return;
+    dragging = true;
+    const t = e.touches ? e.touches[0] : e;
+    startX = t.clientX;
+    startY = t.clientY;
+    origX = card.offsetLeft;
+    origY = card.offsetTop;
+    card.style.cursor = 'grabbing';
+    card.style.zIndex = '999';
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    const t = e.touches ? e.touches[0] : e;
+    card.style.left = (origX + t.clientX - startX) + 'px';
+    card.style.top = (origY + t.clientY - startY) + 'px';
+  }
+  function onEnd() {
+    if (!dragging) return;
+    dragging = false;
+    card.style.cursor = 'grab';
+    card.style.zIndex = '';
+    // 保存位置
+    localStorage.setItem('cardPos_' + id, JSON.stringify({
+      x: card.offsetLeft, y: card.offsetTop
+    }));
+  }
+
+  card.addEventListener('mousedown', onStart);
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onEnd);
+  card.addEventListener('touchstart', onStart, { passive: false });
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onEnd);
+
+  // 加载保存的位置
+  try {
+    const p = JSON.parse(localStorage.getItem('cardPos_' + id) || 'null');
+    if (p) { card.style.left = p.x + 'px'; card.style.top = p.y + 'px'; }
+  } catch(e) {}
+});
 
 loadData();
 </script>
