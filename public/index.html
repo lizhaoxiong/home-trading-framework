@@ -206,6 +206,17 @@
     font-size: 10px; color: rgba(255,255,255,0.12); letter-spacing: 2px;
     pointer-events: none;
   }
+
+  .drag-handle-area {
+    position: absolute;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    top: 211px; left: 211px;
+    z-index: 10;
+    cursor: grab;
+    background: rgba(255,255,255,0.01);
+  }
+  .drag-handle-area:active { cursor: grabbing; }
   .free-card[draggable="true"], .free-card.draggable {
     cursor: grab;
   }
@@ -244,7 +255,8 @@
     <canvas id="radarLowRisk" width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card draggable" id="cardLeft" style="left:300px;top:1040px;">
+  <div class="free-card" id="cardLeft" style="left:300px;top:1040px;">
+    <div class="drag-handle-area" id="leftDragHandle"></div>
     <canvas id="radarLeft" width="462" height="462"></canvas>
   </div>
 
@@ -680,7 +692,9 @@ document.getElementById('themeInput').addEventListener('keydown', e => { if (e.k
   if (!card) return;
   let dragging = false, startX, startY, origX, origY;
 
-  card.style.cursor = 'grab';
+  // 审美雷达图：只允许中心圆点区域拖动
+  const isLeftRadar = id === 'cardLeft';
+  const dragHandle = isLeftRadar ? document.getElementById('leftDragHandle') : card;
 
   function onStart(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
@@ -691,8 +705,8 @@ document.getElementById('themeInput').addEventListener('keydown', e => { if (e.k
     startY = t.clientY;
     origX = card.offsetLeft;
     origY = card.offsetTop;
-    card.style.cursor = 'grabbing';
     card.style.zIndex = '999';
+    if (!isLeftRadar) card.style.cursor = 'grabbing';
   }
   function onMove(e) {
     if (!dragging) return;
@@ -703,18 +717,18 @@ document.getElementById('themeInput').addEventListener('keydown', e => { if (e.k
   function onEnd() {
     if (!dragging) return;
     dragging = false;
-    card.style.cursor = 'grab';
     card.style.zIndex = '';
+    if (!isLeftRadar) card.style.cursor = 'grab';
     // 保存位置
     localStorage.setItem('cardPos_' + id, JSON.stringify({
       x: card.offsetLeft, y: card.offsetTop
     }));
   }
 
-  card.addEventListener('mousedown', onStart);
+  dragHandle.addEventListener('mousedown', onStart);
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup', onEnd);
-  card.addEventListener('touchstart', onStart, { passive: false });
+  dragHandle.addEventListener('touchstart', onStart, { passive: false });
   document.addEventListener('touchmove', onMove, { passive: false });
   document.addEventListener('touchend', onEnd);
 
