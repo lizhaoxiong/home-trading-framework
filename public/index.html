@@ -254,11 +254,6 @@
     <div class="radar-divider" id="opportunityDivider" style="font-size:20px; padding:8px 16px;">&lt;---机(梭)---&gt;</div>
   </div>
 
-  <div class="free-card" id="cardRight">
-    <span class="drag-hint">拖动</span>
-    <canvas id="radarRight" width="462" height="462"></canvas>
-  </div>
-
   <div class="free-card" id="cardStock">
     <span class="drag-hint">拖动</span>
     <div class="stock-center-col">
@@ -548,10 +543,6 @@ const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
   'rgba(126,200,227,1)', '审美(选)', scheduleSave, 173);
 
-const radarR = new RadarChart('radarRight',
-  ['早盘低吸','下午低吸','竞价买入','早盘跟随','早盘打板','空仓等待'],
-  'rgba(240,184,126,1)', '计划', scheduleSave, 115);
-
 /* ─────────────── 数据 ─────────────── */
 let stocks = [], themes = [];
 let activeStockIdx = -1, activeThemeIdx = -1;
@@ -559,8 +550,7 @@ let activeStockIdx = -1, activeThemeIdx = -1;
 function syncRadars() {
   if (activeStockIdx >= 0 && stocks[activeStockIdx]) {
     radarL.setValues(stocks[activeStockIdx].valLeft);
-    radarR.setValues(stocks[activeStockIdx].valRight);
-  } else { radarL.clearValues(); radarR.clearValues(); }
+  } else { radarL.clearValues(); }
 }
 
 /* ─────────────── 通用列表操作 ─────────────── */
@@ -577,7 +567,7 @@ function addItem(type) {
   const name = input.value.trim();
   if (!name) { input.focus(); return; }
   if (type === 'stock') {
-    cfg.list.push({ name, valLeft: new Array(6).fill(0.5), valRight: new Array(6).fill(0.5) });
+    cfg.list.push({ name, valLeft: new Array(6).fill(0.5) });
   } else {
     cfg.list.push({ name });
   }
@@ -692,7 +682,7 @@ const defaultPositions = {
   cardDivider1: { x: 440,  y: 200 },
   cardDivider2: { x: 440,  y: 1100 },
   cardRight:    { x: 0,    y: 1340 },
-  cardStock:    { x: 520,  y: 1340 },
+  cardStock:    { x: 520,  y: 880 },
   cardTheme:    { x: 0,    y: 1340 },
 };
 
