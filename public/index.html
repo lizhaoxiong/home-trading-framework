@@ -400,7 +400,7 @@ class RadarChart {
       const totalH = (lines.length - 1) * lineH;
       ctx.fillStyle='rgba(200,218,240,0.85)'; ctx.font='11px PingFang SC,Microsoft YaHei,sans-serif';
       lines.forEach((line, li) => ctx.fillText(line, x, y - totalH/2 + li * lineH));
-      if (has) {
+      if (has && !this.checkMode) {
         ctx.font='10px PingFang SC,sans-serif'; ctx.fillStyle=`rgba(${rgb},0.6)`;
         ctx.fillText(`${Math.round(vals[i]*100)}%`, x, y + totalH/2 + 12);
       }
