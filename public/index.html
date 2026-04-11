@@ -48,6 +48,21 @@
   .top-radars .radar-card { display: flex; flex-direction: column; align-items: center; }
   canvas { cursor: crosshair; display: block; }
 
+  .radar-divider {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: 4px;
+    color: rgba(255,100,100,0.4);
+    white-space: nowrap;
+  }
+  .radar-divider::before, .radar-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, rgba(255,100,100,0.3), rgba(255,100,100,0.05));
+  }
+  .radar-divider::after {
+    background: linear-gradient(90deg, rgba(255,100,100,0.05), rgba(255,100,100,0.3));
+  }
+
   /* 底部：审美 | 股票 | 计划 */
   .bottom-grid {
     display: grid;
@@ -185,6 +200,7 @@
 <div class="top-radars">
   <div class="top-radars-row">
     <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
+    <div class="radar-divider">危(核)</div>
     <div class="radar-card"><canvas id="radarLowRisk" width="360" height="360"></canvas></div>
   </div>
   <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
