@@ -206,15 +206,6 @@
     font-size: 10px; color: rgba(255,255,255,0.12); letter-spacing: 2px;
     pointer-events: none;
   }
-
-  .connector-line {
-    position: absolute;
-    width: 600px; height: 0;
-    border-top: 1.5px dashed rgba(255,255,255,0.15);
-    pointer-events: none;
-  }
-  .risk-line { }
-  .opp-line { }
   .free-card[draggable="true"], .free-card.draggable {
     cursor: grab;
   }
@@ -231,7 +222,20 @@
     <canvas id="radarRisk"  width="462" height="462"></canvas>
   </div>
 
-  <div class="connector-line risk-line" style="left:231px;top:231px;"></div>
+  <svg class="connector-svg" viewBox="0 0 1200 2100" fill="none" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:1200px;height:2100px;pointer-events:none;">
+    <!-- 高位风险 ↔ 低位风险 (水平) -->
+    <line x1="231" y1="231" x2="831" y2="231" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- 高位机会 ↔ 低位机会 (水平) -->
+    <line x1="231" y1="751" x2="831" y2="751" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- 高位风险 ↔ 低位机会 (对角线) -->
+    <line x1="231" y1="231" x2="831" y2="751" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,6"/>
+    <!-- 低位风险 ↔ 高位机会 (对角线) -->
+    <line x1="831" y1="231" x2="231" y2="751" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,6"/>
+    <!-- 低位风险 ↔ 低位机会 (垂直) -->
+    <line x1="831" y1="231" x2="831" y2="751" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- 高位风险 ↔ 高位机会 (垂直) -->
+    <line x1="231" y1="231" x2="231" y2="751" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,4"/>
+  </svg>
 
   <div class="free-card" id="cardLowRisk" style="left:600px;top:0;">
     <canvas id="radarLowRisk" width="462" height="462"></canvas>
