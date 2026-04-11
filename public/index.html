@@ -173,9 +173,9 @@
 <!-- 主网格：左雷达 | 股票 | 右雷达 -->
 <div class="main-grid">
 
-  <!-- 左列：赚钱效应 + 审美 -->
+  <!-- 左列：危(核) + 审美 -->
   <div class="radar-col">
-    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
+    <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
     <div class="radar-card"><canvas id="radarLeft"  width="462" height="462"></canvas></div>
   </div>
 
@@ -190,9 +190,9 @@
     </div>
   </div>
 
-  <!-- 右列：风险 + 计划 -->
+  <!-- 右列：机(梭) + 计划 -->
   <div class="radar-col">
-    <div class="radar-card"><canvas id="radarRisk"  width="462" height="462"></canvas></div>
+    <div class="radar-card"><canvas id="radarMoney" width="462" height="462"></canvas></div>
     <div class="radar-card"><canvas id="radarRight" width="462" height="462"></canvas></div>
   </div>
 
@@ -404,12 +404,12 @@ let moneyValues = new Array(6).fill(0.5);
 let riskValues  = new Array(6).fill(0.5);
 
 const radarMoney = new RadarChart('radarMoney',
-  ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','低吸反核博地天','创业板20cm','弱势行情抱团资金'],
-  'rgba(100,220,140,1)', '机会(买)', scheduleSave, 120);
+  ['龙头连板主升打板','趋势加速破前高','低吸N字涨停突破','龙头超跌博反弹','新方向试错博发酵','弱势行情抱团资金'],
+  'rgba(100,220,140,1)', '机(梭)', scheduleSave, 120);
 
 const radarRisk = new RadarChart('radarRisk',
   ['高位缺口放量抢跑','新低方向吸走资金','趋势高位加速高潮','严重异动监管趋严','上影双顶针刺破位','高位人气巅峰兑现'],
-  'rgba(255,100,100,1)', '风险(卖)', scheduleSave, 120);
+  'rgba(255,100,100,1)', '危(核)', scheduleSave, 120);
 
 const radarL = new RadarChart('radarLeft',
   ['唯一辨识度','题材地位','冰点表现','连板梯队','超预期','主升突破'],
