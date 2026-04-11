@@ -406,11 +406,12 @@ class RadarChart {
       }
     });
     // 中心标签（始终显示）
+    const allChecked = this.checkMode && this.checks && this.checks.every(c => c === 1);
     ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
-    ctx.fillStyle=`rgba(${rgb},${has?0.9:0.25})`; ctx.fill();
+    ctx.fillStyle=allChecked ? 'rgba(100,220,140,0.9)' : `rgba(${rgb},${has?0.9:0.25})`; ctx.fill();
     ctx.font='bold 13px PingFang SC,Microsoft YaHei,sans-serif';
     ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle=`rgba(${rgb},${has?1:0.3})`;
+    ctx.fillStyle=allChecked ? 'rgba(100,220,140,1)' : `rgba(${rgb},${has?1:0.3})`;
     ctx.fillText(this.centerLabel, cx, cy+20);
   }
 }
