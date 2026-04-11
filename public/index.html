@@ -198,18 +198,7 @@
   }
   .free-card {
     position: absolute;
-    cursor: grab;
-    transition: box-shadow 0.15s;
   }
-  .free-card:active { cursor: grabbing; }
-  .free-card:hover { filter: brightness(1.05); }
-  .free-card.dragging { opacity: 0.85; z-index: 999; }
-  .free-card .drag-hint {
-    position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
-    font-size: 10px; color: rgba(255,255,255,0.15); letter-spacing: 2px;
-    pointer-events: none; opacity: 0; transition: opacity 0.2s;
-  }
-  .free-card:hover .drag-hint { opacity: 1; }
 </style>
 </head>
 <body>
@@ -219,43 +208,35 @@
 <!-- 自由布局画布 -->
 <div class="free-canvas" id="freeCanvas">
 
-  <div class="free-card" id="cardRisk">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardRisk" style="left:0;top:0;">
     <canvas id="radarRisk"  width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card" id="cardLowRisk">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardLowRisk" style="left:600px;top:0;">
     <canvas id="radarLowRisk" width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card" id="cardLeft">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardLeft" style="left:300px;top:1040px;">
     <canvas id="radarLeft" width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card" id="cardHighOpp">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardHighOpp" style="left:0;top:520px;">
     <canvas id="radarHighOpp" width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card" id="cardMoney">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardMoney" style="left:600px;top:520px;">
     <canvas id="radarMoney" width="462" height="462"></canvas>
   </div>
 
-  <div class="free-card" id="cardDivider1">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardDivider1" style="left:490px;top:160px;">
     <div class="radar-divider" style="font-size:20px; padding:8px 16px;">&lt;---危(核)---&gt;</div>
   </div>
 
-  <div class="free-card" id="cardDivider2">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardDivider2" style="left:490px;top:680px;">
     <div class="radar-divider" id="opportunityDivider" style="font-size:20px; padding:8px 16px;">&lt;---机(梭)---&gt;</div>
   </div>
 
-  <div class="free-card" id="cardStock">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardStock" style="left:300px;top:1500px;">
     <div class="stock-center-col">
       <div class="list-header">股票</div>
       <div class="item-list" id="stockList"></div>
@@ -267,8 +248,7 @@
     </div>
   </div>
 
-  <div class="free-card" id="cardTheme">
-    <span class="drag-hint">拖动</span>
+  <div class="free-card" id="cardTheme" style="left:0;top:1500px;">
     <div class="list-col">
       <div class="list-header">题材</div>
       <div class="item-list" id="themeList"></div>
@@ -672,87 +652,7 @@ function renderList(type) {
 document.getElementById('stockInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem('stock'); });
 document.getElementById('themeInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem('theme'); });
 
-/* ─────────────── 自由布局拖拽 ─────────────── */
-const defaultPositions = {
-  cardRisk:     { x: 0,    y: 0 },
-  cardLowRisk:  { x: 520,  y: 0 },
-  cardLeft:     { x: 330,  y: 460 },
-  cardHighOpp:  { x: 0,    y: 880 },
-  cardMoney:    { x: 520,  y: 880 },
-  cardDivider1: { x: 440,  y: 200 },
-  cardDivider2: { x: 440,  y: 1100 },
-  cardRight:    { x: 0,    y: 1340 },
-  cardStock:    { x: 520,  y: 880 },
-  cardTheme:    { x: 0,    y: 1340 },
-};
-
-function initFreeLayout() {
-  const cards = document.querySelectorAll('.free-card');
-  const canvas = document.getElementById('freeCanvas');
-
-  // 加载保存的位置
-  let savedPos = {};
-  try { savedPos = JSON.parse(localStorage.getItem('radarPositions') || '{}'); } catch(e) {}
-
-  cards.forEach(card => {
-    const id = card.id;
-    const pos = savedPos[id] || defaultPositions[id] || { x: 0, y: 0 };
-    card.style.left = pos.x + 'px';
-    card.style.top = pos.y + 'px';
-
-    // 分隔线也可拖拽
-
-    let dragging = false, startX, startY, origX, origY;
-
-    function onStart(e) {
-      // 排除输入框和按钮
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
-      if (e.target.closest('.item-list') || e.target.closest('.item-chip')) return;
-
-      dragging = true;
-      const touch = e.touches ? e.touches[0] : e;
-      startX = touch.clientX;
-      startY = touch.clientY;
-      origX = pos.x;
-      origY = pos.y;
-      card.classList.add('dragging');
-    }
-
-    function onMove(e) {
-      if (!dragging) return;
-      const touch = e.touches ? e.touches[0] : e;
-      const dx = touch.clientX - startX;
-      const dy = touch.clientY - startY;
-      pos.x = origX + dx;
-      pos.y = origY + dy;
-      card.style.left = pos.x + 'px';
-      card.style.top = pos.y + 'px';
-    }
-
-    function onEnd() {
-      if (!dragging) return;
-      dragging = false;
-      card.classList.remove('dragging');
-      // 保存位置
-      const allPos = {};
-      cards.forEach(c => {
-        const cp = savedPos[c.id] || defaultPositions[c.id] || { x: 0, y: 0 };
-        allPos[c.id] = { x: parseInt(c.style.left) || cp.x, y: parseInt(c.style.top) || cp.y };
-      });
-      localStorage.setItem('radarPositions', JSON.stringify(allPos));
-    }
-
-    card.addEventListener('mousedown', onStart);
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onEnd);
-    card.addEventListener('touchstart', onStart, { passive: false });
-    document.addEventListener('touchmove', onMove, { passive: false });
-    document.addEventListener('touchend', onEnd);
-  });
-}
-
 loadData();
-setTimeout(initFreeLayout, 100);
 </script>
 </body>
 </html>
