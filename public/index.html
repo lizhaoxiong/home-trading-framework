@@ -231,6 +231,11 @@
 <!-- 自由布局画布 -->
 <div class="free-canvas" id="freeCanvas">
 
+  <div class="free-card" id="cardLeft" style="left:300px;top:1040px;">
+    <div class="drag-handle-area" id="leftDragHandle"></div>
+    <canvas id="radarLeft" width="462" height="462"></canvas>
+  </div>
+
   <div class="free-card" id="cardRisk" style="left:0;top:0;">
     <canvas id="radarRisk"  width="462" height="462"></canvas>
   </div>
@@ -266,11 +271,6 @@
     <text x="531" y="224" text-anchor="middle" fill="rgba(200,30,30,0.7)" font-size="14" font-weight="bold" letter-spacing="3" font-family="PingFang SC,Microsoft YaHei,sans-serif">危(核)</text>
     <text x="531" y="744" text-anchor="middle" fill="rgba(100,220,140,0.7)" font-size="14" font-weight="bold" letter-spacing="3" font-family="PingFang SC,Microsoft YaHei,sans-serif">机(梭)</text>
   </svg>
-
-  <div class="free-card" id="cardLeft" style="left:300px;top:1040px;">
-    <div class="drag-handle-area" id="leftDragHandle"></div>
-    <canvas id="radarLeft" width="462" height="462"></canvas>
-  </div>
 
   <div class="free-card draggable" id="cardStock" style="left:300px;top:1500px;">
     <div class="stock-center-col">
