@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关注最强->参与最强->成为最强->梭哈最强</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #0a0e1a;
+      color: #e0e6f0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+    }
+    .page-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 14px 10px 10px;
+      background: linear-gradient(90deg, #86b9ff 0%, #ffffff 50%, #87f3bf 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .block-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 0;
+      height: calc(100vh - 60px);
+    }
+    .block-card {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.04);
+      min-height: 0;
+      padding: 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .block-card:hover {
+      border-color: rgba(134, 185, 255, 0.55);
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-2px);
+    }
+    .block-title {
+      width: 100%;
+      font-size: 24px;
+      line-height: 1.45;
+      font-weight: 700;
+      color: #f0f5ff;
+      letter-spacing: 0.5px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .block-title:hover { color: #ffffff; }
+    .block-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .upload-input {
+      display: none;
+    }
+    .preview-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 2px;
+    }
+    .preview-image {
+      width: calc(50% - 20px);
+      max-height: 120px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.25);
+      display: none;
+    }
+    @media (max-width: 900px) {
+      body { overflow: auto; height: auto; min-height: 100vh; }
+      .page-title { font-size: 22px; padding-top: 12px; }
+      .block-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        height: auto;
+        min-height: calc(100vh - 52px);
+      }
+      .block-card { min-height: 180px; }
+      .block-title { font-size: 20px; }
+      .preview-image {
+        width: calc(50% - 20px);
+        min-width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-title">关注最强-&gt;参与最强-&gt;成为最强-&gt;梭哈最强</h1>
+    <div class="block-grid">
+      <section class="block-card">
+        <div class="block-content">
+          <h2 class="block-title">龙头弱转强换手连板</h2>
+          <input class="upload-input" type="file" accept="image/*">
+          <div class="preview-row">
+            <img class="preview-image" alt="龙头弱转强换手连板左侧图片预览">
+            <img class="preview-image" alt="龙头弱转强换手连板右侧图片预览">
+          </div>
+        </div>
+      </section>
+      <section class="block-card">
+        <div class="block-content">
+          <h2 class="block-title">龙头N字涨停法突破</h2>
+          <input class="upload-input" type="file" accept="image/*">
+          <div class="preview-row">
+            <img class="preview-image" alt="龙头N字涨停法突破左侧图片预览">
+            <img class="preview-image" alt="龙头N字涨停法突破右侧图片预览">
+          </div>
+        </div>
+      </section>
+      <section class="block-card">
+        <div class="block-content">
+          <h2 class="block-title">节点或者新题材启动</h2>
+          <input class="upload-input" type="file" accept="image/*">
+          <div class="preview-row">
+            <img class="preview-image" alt="节点或者新题材启动左侧图片预览">
+            <img class="preview-image" alt="节点或者新题材启动右侧图片预览">
+          </div>
+        </div>
+      </section>
+      <section class="block-card">
+        <div class="block-content">
+          <h2 class="block-title">拉高长时间横盘突破</h2>
+          <input class="upload-input" type="file" accept="image/*">
+          <div class="preview-row">
+            <img class="preview-image" alt="拉高长时间横盘突破左侧图片预览">
+            <img class="preview-image" alt="拉高长时间横盘突破右侧图片预览">
+          </div>
+        </div>
+      </section>
+      <section class="block-card">
+        <div class="block-content">
+          <h2 class="block-title">趋势小步快走开启加速</h2>
+          <input class="upload-input" type="file" accept="image/*">
+          <div class="preview-row">
+            <img class="preview-image" alt="趋势小步快走开启加速左侧图片预览">
+            <img class="preview-image" alt="趋势小步快走开启加速右侧图片预览">
+          </div>
+        </div>
+      </section>
+      <section class="block-card">
+        <div class="block-content">
+          <h2 class="block-title">长跌横盘底部确认后突破</h2>
+          <input class="upload-input" type="file" accept="image/*">
+          <div class="preview-row">
+            <img class="preview-image" alt="长跌横盘底部确认后突破左侧图片预览">
+            <img class="preview-image" alt="长跌横盘底部确认后突破右侧图片预览">
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script>
+    const blockStates = [];
+
+    function collectPayload() {
+      return {
+        blocks: blockStates.map((state) => ({
+          images: [
+            state.leftPreview.getAttribute("src") || "",
+            state.rightPreview.getAttribute("src") || ""
+          ]
+        }))
+      };
+    }
+
+    async function saveAllImages() {
+      try {
+        await fetch("/api/strongest-images", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(collectPayload())
+        });
+      } catch (e) {
+        console.error("保存图片失败", e);
+      }
+    }
+
+    function applyImage(state, slot, src) {
+      if (!src) return;
+      const target = state.previews[slot];
+      target.src = src;
+      target.style.display = "block";
+      target.onload = () => {
+        if (target === state.leftPreview) {
+          state.syncSizeWithLeft();
+        } else if (state.leftPreview.style.display === "block") {
+          state.rightPreview.style.width = state.leftPreview.style.width;
+          state.rightPreview.style.height = state.leftPreview.style.height;
+        }
+      };
+    }
+
+    document.querySelectorAll(".block-content").forEach((block, blockIdx) => {
+      const title = block.querySelector(".block-title");
+      const input = block.querySelector(".upload-input");
+      const previews = block.querySelectorAll(".preview-image");
+      const leftPreview = previews[0];
+      const rightPreview = previews[1];
+      let nextSlot = 0;
+
+      function syncSizeWithLeft() {
+        if (leftPreview.style.display !== "block") return;
+        requestAnimationFrame(() => {
+          const width = leftPreview.clientWidth;
+          const height = leftPreview.clientHeight;
+          if (!width || !height) return;
+          previews.forEach((img) => {
+            img.style.width = `${width}px`;
+            img.style.height = `${height}px`;
+          });
+        });
+      }
+
+      const state = {
+        blockIdx,
+        previews,
+        leftPreview,
+        rightPreview,
+        get nextSlot() {
+          return nextSlot;
+        },
+        set nextSlot(v) {
+          nextSlot = v;
+        },
+        syncSizeWithLeft
+      };
+      blockStates.push(state);
+
+      title.addEventListener("click", () => input.click());
+      input.addEventListener("change", () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          applyImage(state, nextSlot, reader.result);
+          nextSlot = (nextSlot + 1) % 2;
+          input.value = "";
+          saveAllImages();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    async function loadAllImages() {
+      try {
+        const res = await fetch("/api/strongest-images");
+        const data = await res.json();
+        if (!data || !Array.isArray(data.blocks)) return;
+        data.blocks.forEach((item, blockIdx) => {
+          const state = blockStates[blockIdx];
+          if (!state || !item || !Array.isArray(item.images)) return;
+          applyImage(state, 0, item.images[0] || "");
+          applyImage(state, 1, item.images[1] || "");
+          if (!item.images[0]) {
+            state.nextSlot = 0;
+          } else if (!item.images[1]) {
+            state.nextSlot = 1;
+          } else {
+            state.nextSlot = 0;
+          }
+        });
+      } catch (e) {
+        console.error("读取图片失败", e);
+      }
+    }
+
+    loadAllImages();
+  </script>
+</body>
+</html>

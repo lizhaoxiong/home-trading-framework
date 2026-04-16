@@ -265,9 +265,35 @@
   .free-card[draggable="true"], .free-card.draggable {
     cursor: grab;
   }
+
+  .page-nav {
+    position: fixed;
+    top: 14px;
+    right: 18px;
+    z-index: 1000;
+  }
+  .page-nav a {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(126,200,227,0.35);
+    background: rgba(126,200,227,0.1);
+    color: #bfe4f7;
+    font-size: 12px;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  .page-nav a:hover {
+    background: rgba(126,200,227,0.2);
+    border-color: rgba(126,200,227,0.6);
+  }
 </style>
 </head>
 <body>
+
+<div class="page-nav">
+  <a href="/strongest.html">关注最强页面</a>
+</div>
 
 <!-- 顶部标题 -->
 
